@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life in Motion - Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInUp 1s forwards 0.3s;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 1s forwards 0.6s;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+            opacity: 0;
+            animation: fadeInBounce 1s forwards 1s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+        }
+
+        @keyframes fadeInBounce {
+            to {
+                opacity: 1;
+            }
+            from {
+                opacity: 0;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .timeline-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            top: 0;
+            bottom: 0;
+        }
+
+        .timeline-event {
+            display: flex;
+            margin-bottom: 4rem;
+            position: relative;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s ease;
+        }
+
+        .timeline-event.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-event:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .event-content {
+            width: 45%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .event-content:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2);
+        }
+
+        .event-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            border: 4px solid #667eea;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-event:hover .event-dot {
+            transform: translateX(-50%) scale(1.5);
+            background: #ffd700;
+        }
+
+        .event-year {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .event-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .event-media {
+            width: 100%;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .event-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .event-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+
+
+        .fun-fact {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .fun-fact strong {
+            color: #ffd700;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .footer h2 {
+            margin-bottom: 1rem;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .contact-links a {
+            color: #ffd700;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .contact-links a:hover {
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 768px) {
+            .timeline-line {
+                left: 30px;
+            }
+
+            .timeline-event {
+                flex-direction: column !important;
+                padding-left: 60px;
+            }
+
+            .event-content {
+                width: 100%;
+            }
+
+            .event-dot {
+                left: 30px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+        }
+
+        #disk {
+            font-size: 5rem;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            cursor: pointer;
+            animation: spin 2s linear infinite;
+
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        #desktop {
+            font-size: 5rem;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            cursor: pointer;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="hero">
+        <h1>Life in Motion</h1>
+        <p>A journey through time, creativity, and growth</p>
+        <div class="scroll-indicator">↓</div>
+    </div>
+
+    <div class="timeline-container">
+        <div class="timeline-line"></div>
+        <div id="timeline-events"></div>
+    </div>
+
+    <div class="artifacts">
+        <!-- Artifacts section can be added here if needed -->
+         <div id="disk">
+            💿
+         </div>
+
+         <div id="desktop" onclick="open_computer_window()">
+            🖥️
+        </div>
+    </div>
+
+    <div class="footer">
+        <h2>Let's Connect</h2>
+        <p>Want to collaborate or just say hi?</p>
+        <div class="contact-links">
+            <a href="https://github.com/MinaRashad/">GitHub</a>
+            <a href="https://www.linkedin.com/in/mina-eskandar-35418a171/">LinkedIn</a>
+            <a href="protofolio@minaeskandar.com">Email</a>
+        </div>
+    </div>
+
+    <script>
+        // Timeline data
+        const timelineData = [
+            {
+                year: "2003",
+                title: "Player Joined the Server",
+                description: "Spawned in Alexandria, Egypt - the Mediterranean city where history meets the sea. Born to a Coptic family with roots spanning the entire country: my father from Upper Egypt, my mother from Lower Egypt. Coincidentally, I share my name with King Mina, the legendary pharaoh who united Upper and Lower Egypt. Destiny? Maybe. Cool origin story? Definitely.",
+                avatar: "🌍",
+                media: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Corniche_of_Alexandria.jpg/1200px-Corniche_of_Alexandria.jpg",
+                tags: ["Alexandria", "Egypt", "New Beginnings"],
+                funFact: null
+            },
+            {
+                year: "2018",
+                title: "Level Up: STEM Alexandria",
+                description: "Finished pre-high school as top of my class (a streak I'd maintained for basically my entire academic life). Then came the challenge: IQ and math tests for Egypt's experimental STEM schools - institutions that accept only ~2,000 students from hundreds of thousands of applicants. Got in. STEM Alexandria became the catalyst that transformed everything. Finally had the space to explore my passions beyond textbooks and discover what genuinely excited me.",
+                avatar: "🎓",
+                media: "https://static.wixstatic.com/media/80b2c1_62741b96fa2e4e77baeee4dfa55074c5~mv2.jpg/v1/fill/w_1280,h_769,fp_0.50_0.50,q_85,enc_avif,quality_auto/80b2c1_62741b96fa2e4e77baeee4dfa55074c5~mv2.jpg",
+                tags: ["STEM", "Top Student", "Self-Discovery"],
+                funFact: null
+            },
+            {
+                year: "2021",
+                title: "Egyptian-Japanese University Era",
+                description: "Graduated high school in the top 10 nationwide, earning a full scholarship to study Engineering at Egyptian-Japanese University. Met incredible friends, dove into Japanese culture, and discovered the university's quirky Japanese restaurant. But something felt off. This path was prestigious, comfortable... and not mine. I wanted something else - something beyond what everyone expected.",
+                avatar: "🎌",
+                media: "https://i.imgur.com/n3R4a2M.jpeg",
+                tags: ["Engineering", "Scholarship", "Cultural Fusion"],
+                funFact: "🐍 Fun Fact: The campus restaurant served authentic (and questionable) Japanese dishes. Tried sea snake once. Tasted exactly as bad as you'd imagine. 0/10, would not recommend."
+            },
+            {
+                year: "2022",
+                title: "The Minerva Dream (& Survival Jobs)",
+                description: "Applied to Minerva University - a school where you study and work in a different country every semester. My dream university, but with acceptance rates lower than my expectations. So I did what any determined person would do: spammed their mailbox with hackathon wins and project showcases. It worked. Got accepted. Then reality hit: tuition. Spent the gap year grinding through deli work, Amazon warehouse shifts, McDonald's, produce associate, cashier jobs. Not glamorous, not well-paid, but gave me life experience money can't buy.",
+                avatar: "💼",
+                media: "https://i.imgur.com/OiiVV6R.jpeg",
+                tags: ["Minerva", "Hustle", "Dream Chasing"],
+                funFact: null
+            },
+            {
+                year: "2023-2024",
+                title: "San Francisco: City by the Bay",
+                description: "First year at Minerva in San Francisco. Met 200 fascinating humans from every corner of the world. Got a work-study managing dorm packages (yes, I became the package guy). Civic project: built an AI data journaling app for a mental health clinic. Lived in a tourist hotspot, so every morning felt like I was walking through someone else's vacation photos. The city taught me that the world is bigger and weirder than I ever imagined.",
+                avatar: "🌉",
+                media: "golden_gate.jpg",
+                tags: ["Minerva", "AI Project", "Cultural Mosaic"],
+                funFact: "🚨 Fun Fact: Biden's motorcade rolled through our street. Secret Service questioned me because my work-study job meant I was the gatekeeper for building access. Had to coordinate parking removals. Very casual, very normal day."
+            },
+            {
+                year: "Summer 2024",
+                title: "Cats, Code & Freelancing",
+                description: "Attended a hackathon. Met the founder of The Dancing Cat (TDC) shelter who mentioned their data management was painfully slow. Offered to help. Also landed a freelance gig with Data Annotation - flexible hours, good pay, worked on personal projects. But the technical growth plateaued. So I pivoted: learned Vue.js, Express.js, DevOps, and Nginx while rebuilding TDC's entire system. They loved it. Still check in regularly to make sure everything's purring along smoothly.",
+                avatar: "🐱",
+                media: "cat.gif",
+                tags: ["Vue.js", "Express.js", "DevOps", "Freelancing"],
+                funFact: null
+            },
+            {
+                year: "Winter 2024",
+                title: "Taipei: First Steps in Asia",
+                description: "Second year at Minerva kicked off in Taipei, Taiwan. A city that hits different - incredible people, food that ruined all future food standards, and nature that looks photoshopped but isn't. Work-study upgraded to research assistant. Civic project: built an AI presentation generator for BearVFX. Won the civic project fair by majority vote. ",
+                avatar: "🏮",
+                media: "panda.jpg",
+                tags: ["Taiwan", "AI Research", "Award Winner"],
+                funFact: "🐱 Fun Fact: The dorm had two cats and a hamster (Chinese names I still can't pronounce, but I loved those cats)."
+            },
+            {
+                year: "Spring 2025",
+                title: "Seoul: K-Drama Food Quest",
+                description: "Landed in Seoul with a mission: try every food that appears in K-dramas. Not because I'm a K-culture superfan, but because my closest friends are, and food is how I experience culture. Plus, everything looked delicious. Work-study continued as research assistant. Civic project: built an AI that generates N8N workflows for GSP. The company hit a technical roadblock we managed to break through. Delivered the app. Seoul delivered the flavors.",
+                avatar: "🍜",
+                media: "bibibibibi.jpg",
+                tags: ["Seoul", "AI Workflows", "Cultural Immersion"],
+                funFact: null
+            },
+            {
+                year: "Winter 2025",
+                title: "Buenos Aires: Current Location",
+                description: "Third year begins in Buenos Aires, Argentina - the colorful city of tango where the architecture is stunning and the empanadas are dangerously addictive. Currently eating a concerning amount of empanadas. The adventure continues. The story is still being written.",
+                avatar: "",
+                media: "buenos.jpg",
+                tags: ["Buenos Aires", "Current", "Empanadas"],
+                funFact: "🥟 Fun Fact: My entire spanish now consists of ordering empanadas, asking for flavours, and saying 'Card' when I pay"
+            }
+        ];
+
+        // Create starfield
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numStars = 200;
+            
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                const size = Math.random() * 3;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Render timeline events
+        function renderTimeline() {
+            const container = document.getElementById('timeline-events');
+            
+            timelineData.forEach((event, index) => {
+                const eventDiv = document.createElement('div');
+                eventDiv.className = 'timeline-event';
+                eventDiv.setAttribute('data-year', event.year);
+                
+                let tagsHTML = event.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+                let funFactHTML = event.funFact ? `<div class="fun-fact"><strong>${event.funFact}</strong></div>` : '';
+                
+                // Check if media is a URL (image) or emoji/text
+                let mediaHTML;
+                if (event.media.length > 2) {
+                    mediaHTML = `<img src="${event.media}" alt="${event.title}">`;
+                } else {
+                    mediaHTML = event.media;
+                }
+                
+                eventDiv.innerHTML = `
+                    <div class="event-dot"></div>
+                    <div class="event-content">
+                        <div class="event-year">${event.year}</div>
+                        <div class="event-title">${event.title}</div>
+                        <div class="event-description">${event.description}</div>
+                        <div class="event-media">${mediaHTML}</div>
+                        <div class="event-tags">${tagsHTML}</div>
+                        ${funFactHTML}
+                    </div>
+                `;
+                
+                container.appendChild(eventDiv);
+            });
+        }
+
+        // Initialize
+        createStars();
+        renderTimeline();
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.timeline-event').forEach(event => {
+            observer.observe(event);
+        });
+
+        // Smooth scroll to timeline on indicator click
+        document.querySelector('.scroll-indicator').addEventListener('click', () => {
+            document.querySelector('.timeline-container').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+
+        // Easter egg: Konami code
+        let konamiCode = [];
+        const konamiPattern = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.key);
+            konamiCode = konamiCode.slice(-10);
+            
+            if (konamiCode.join(',') === konamiPattern.join(',')) {
+                alert('🎉 You found the secret! You are awesome!');
+            }
+        });
+
+
+        // artifacts
+        function open_computer_window() {
+            // create a window div
+            const windowDiv = document.createElement('div');
+            windowDiv.style.position = 'fixed';
+            windowDiv.style.top = '50%';
+            windowDiv.style.left = '50%';
+            windowDiv.style.transform = 'translate(-50%, -50%)';
+            windowDiv.style.width = '80%';
+            windowDiv.style.height = '80%';
+            windowDiv.style.background = 'rgba(0, 0, 0, 0.8)';
+            windowDiv.style.border = '2px solid #fff';
+            windowDiv.style.borderRadius = '10px';
+            windowDiv.style.zIndex = '1000';
+            windowDiv.style.padding = '1rem';
+            windowDiv.style.overflow = 'auto';
+
+            // add content to the window
+            OS_link = 'https://minarashad.github.io/web_system/';;
+
+            windowDiv.innerHTML = `
+                <h2 style="color: #fff; text-align: center;">Web System</h2>
+                <iframe src="${OS_link}" style="width: 100%; height: 90%; border: none; border-radius: 10px;"></iframe>
+                <button id="close-window" style="position: absolute; top: 10px; right: 10px; background: #ff4c4c; border: none; color: #fff; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">Close</button>
+            `;
+            // add header with close button
+            windowDiv.querySelector('#close-window').addEventListener('click', () => {
+                document.body.removeChild(windowDiv);
+            });
+
+
+            document.body.appendChild(windowDiv);
+
+
+        }
+    </script>
+</body>
+</html>
