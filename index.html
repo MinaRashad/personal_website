@@ -228,8 +228,6 @@
             font-size: 0.85rem;
         }
 
-
-
         .fun-fact {
             margin-top: 1rem;
             padding: 1rem;
@@ -240,6 +238,138 @@
 
         .fun-fact strong {
             color: #ffd700;
+        }
+
+        .floating-artifact {
+            font-size: 2rem;
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.3s ease, filter 0.3s ease;
+            z-index: 0;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+        }
+
+        .floating-artifact:hover {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
+        }
+
+        @keyframes drift1 {
+            0% { transform: translate(0vw, 0vh) rotate(0deg); }
+            25% { transform: translate(15vw, -10vh) rotate(15deg); }
+            50% { transform: translate(-10vw, -20vh) rotate(-10deg); }
+            75% { transform: translate(20vw, -15vh) rotate(20deg); }
+            100% { transform: translate(0vw, 0vh) rotate(0deg); }
+        }
+
+        @keyframes drift2 {
+            0% { transform: translate(0vw, 0vh) rotate(0deg); }
+            25% { transform: translate(-20vw, 15vh) rotate(-20deg); }
+            50% { transform: translate(10vw, 25vh) rotate(15deg); }
+            75% { transform: translate(-15vw, 10vh) rotate(-15deg); }
+            100% { transform: translate(0vw, 0vh) rotate(0deg); }
+        }
+
+        @keyframes drift3 {
+            0% { transform: translate(0vw, 0vh) rotate(0deg); }
+            25% { transform: translate(10vw, 20vh) rotate(10deg); }
+            50% { transform: translate(-15vw, 15vh) rotate(-20deg); }
+            75% { transform: translate(12vw, -10vh) rotate(25deg); }
+            100% { transform: translate(0vw, 0vh) rotate(0deg); }
+        }
+
+        @keyframes drift4 {
+            0% { transform: translate(0vw, 0vh) rotate(0deg); }
+            25% { transform: translate(-12vw, -15vh) rotate(-15deg); }
+            50% { transform: translate(18vw, -10vh) rotate(20deg); }
+            75% { transform: translate(-10vw, 12vh) rotate(-25deg); }
+            100% { transform: translate(0vw, 0vh) rotate(0deg); }
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: rgba(20, 20, 40, 0.95);
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-emoji {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            animation: bounce 1s ease infinite;
+        }
+
+        .modal-message {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .modal-button {
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .modal-button.yes {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+
+        .modal-button.yes:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .modal-button.no {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-button.no:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
         }
 
         .footer {
@@ -296,38 +426,11 @@
             .hero p {
                 font-size: 1.2rem;
             }
+
+            .floating-artifact {
+                font-size: 1rem;
+            }
         }
-
-        #disk {
-            font-size: 5rem;
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            cursor: pointer;
-            animation: spin 2s linear infinite;
-
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        #desktop {
-            font-size: 5rem;
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            cursor: pointer;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-
     </style>
 </head>
 <body>
@@ -344,15 +447,8 @@
         <div id="timeline-events"></div>
     </div>
 
-    <div class="artifacts">
-        <!-- Artifacts section can be added here if needed -->
-         <div id="disk" onclick="open_music_link()">
-            💿
-         </div>
-
-         <div id="desktop" onclick="open_computer_window()">
-            🖥️
-        </div>
+    <div class="artifacts" id="artifacts-container">
+        <!-- Floating artifacts will be rendered here -->
     </div>
 
     <div class="footer">
@@ -368,6 +464,38 @@
     </div>
 
     <script>
+        // Artifacts data
+        const artifactsData = {
+            'music': {
+                emoji: '🎵',
+                message: 'My music playlist, full of random things I love that no one knows about.',
+                link: 'https://spotify.link/rndKoZOICXb',
+                yesText: 'Yay',
+                noText: 'Nay'
+            },
+            'webSystem': {
+                emoji: '🖥️',
+                message: 'My custom web-based operating system. A fun experiment in browser UI.',
+                link: 'https://minarashad.github.io/web_system/',
+                yesText: 'Boot it up!',
+                noText: 'Not now'
+            },
+            'github': {
+                emoji: '🐙',
+                message: 'My GitHub profile with most of my projects. Check it out?',
+                link: 'https://github.com/MinaRashad/',
+                yesText: 'Show me the code!',
+                noText: 'Pass'
+            },
+            'telegram': {
+                emoji: '✈️',
+                message: 'Hit me up on Telegram.',
+                link: 'https://t.me/Minatherobot',
+                yesText: 'Let\'s talk!',
+                noText: 'Another time'
+            }
+        };
+
         // Timeline data
         const timelineData = [
             {
@@ -510,9 +638,116 @@
             });
         }
 
+        // Render floating artifacts
+        function renderArtifacts() {
+            const container = document.getElementById('artifacts-container');
+            const artifacts = Object.keys(artifactsData);
+            
+            // Random starting positions across the screen
+            const positions = [
+                { top: '20%', right: '15%', animation: 'drift1 25s ease-in-out infinite' },
+                { top: '60%', left: '25%', animation: 'drift2 30s ease-in-out infinite' },
+                { bottom: '30%', left: '20%', animation: 'drift3 28s ease-in-out infinite' },
+                { top: '40%', left: '10%', animation: 'drift4 27s ease-in-out infinite' }
+            ];
+            
+            artifacts.forEach((key, index) => {
+                const data = artifactsData[key];
+                const div = document.createElement('div');
+                div.className = 'floating-artifact';
+                div.textContent = data.emoji;
+                
+                // Set random starting position
+                if (positions[index].top) div.style.top = positions[index].top;
+                if (positions[index].bottom) div.style.bottom = positions[index].bottom;
+                if (positions[index].left) div.style.left = positions[index].left;
+                if (positions[index].right) div.style.right = positions[index].right;
+                
+                div.style.animation = positions[index].animation;
+                
+                div.addEventListener('click', () => openArtifactModal(key));
+                container.appendChild(div);
+            });
+        }
+
+        // Open artifact modal
+        function openArtifactModal(artifactKey) {
+            const data = artifactsData[artifactKey];
+            
+            const overlay = document.createElement('div');
+            overlay.className = 'modal-overlay';
+            
+            overlay.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-emoji">${data.emoji}</div>
+                    <div class="modal-message">${data.message}</div>
+                    <div class="modal-buttons">
+                        <button class="modal-button yes" id="modal-yes">${data.yesText}</button>
+                        <button class="modal-button no" id="modal-no">${data.noText}</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+            
+            overlay.querySelector('#modal-yes').addEventListener('click', () => {
+                if (data.iframe) {
+                    openIframeWindow(data.link, artifactKey);
+                } else {
+                    window.open(data.link, '_blank');
+                }
+                document.body.removeChild(overlay);
+            });
+            
+            overlay.querySelector('#modal-no').addEventListener('click', () => {
+                document.body.removeChild(overlay);
+            });
+            
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    document.body.removeChild(overlay);
+                }
+            });
+        }
+
+        // Open iframe window
+        function openIframeWindow(url, title) {
+            const windowDiv = document.createElement('div');
+            windowDiv.style.position = 'fixed';
+            windowDiv.style.top = '50%';
+            windowDiv.style.left = '50%';
+            windowDiv.style.transform = 'translate(-50%, -50%)';
+            windowDiv.style.width = '80%';
+            windowDiv.style.height = '80%';
+            windowDiv.style.background = 'rgba(0, 0, 0, 0.9)';
+            windowDiv.style.border = '2px solid rgba(255, 215, 0, 0.5)';
+            windowDiv.style.borderRadius = '10px';
+            windowDiv.style.zIndex = '2000';
+            windowDiv.style.padding = '1rem';
+            windowDiv.style.overflow = 'auto';
+
+            windowDiv.innerHTML = `
+                <h2 style="color: #fff; text-align: center; margin-bottom: 1rem;">${title}</h2>
+                <iframe src="${url}" style="width: 100%; height: 90%; border: none; border-radius: 10px;"></iframe>
+                <button id="close-window" style="position: absolute; top: 10px; right: 10px; background: #ff4c4c; border: none; color: #fff; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">✕</button>
+                <button id="open-externally" style="position: absolute; top: 10px; left: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: #fff; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">↗ Open Externally</button>
+            `;
+            
+            windowDiv.querySelector('#close-window').addEventListener('click', () => {
+                document.body.removeChild(windowDiv);
+            });
+            
+            windowDiv.querySelector('#open-externally').addEventListener('click', () => {
+                window.open(url, '_blank');
+            });
+
+            document.body.appendChild(windowDiv);
+        }
+
         // Initialize
         createStars();
         renderTimeline();
+        renderArtifacts();
 
         // Intersection Observer for scroll animations
         const observerOptions = {
@@ -551,77 +786,6 @@
                 alert('🎉 You found the secret! You are awesome!');
             }
         });
-
-
-        // artifacts
-        function open_computer_window() {
-            // create a window div
-            const windowDiv = document.createElement('div');
-            windowDiv.style.position = 'fixed';
-            windowDiv.style.top = '50%';
-            windowDiv.style.left = '50%';
-            windowDiv.style.transform = 'translate(-50%, -50%)';
-            windowDiv.style.width = '80%';
-            windowDiv.style.height = '80%';
-            windowDiv.style.background = 'rgba(0, 0, 0, 0.8)';
-            windowDiv.style.border = '2px solid #fff';
-            windowDiv.style.borderRadius = '10px';
-            windowDiv.style.zIndex = '1000';
-            windowDiv.style.padding = '1rem';
-            windowDiv.style.overflow = 'auto';
-
-            // add content to the window
-            OS_link = 'https://minarashad.github.io/web_system/';;
-
-            windowDiv.innerHTML = `
-                <h2 style="color: #fff; text-align: center;">Web System</h2>
-                <iframe src="${OS_link}" style="width: 100%; height: 90%; border: none; border-radius: 10px;"></iframe>
-                <button id="close-window" style="position: absolute; top: 10px; right: 10px; background: #ff4c4c; border: none; color: #fff; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">Close</button>
-                <button id="open-externally" style="position: absolute; top: 10px; left: 10px; background: #4caf50; border: none; color: #fff; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">Open Externally</button>
-                `;
-            // add header with close button
-            windowDiv.querySelector('#close-window').addEventListener('click', () => {
-                document.body.removeChild(windowDiv);
-            });
-            windowDiv.querySelector('#open-externally').addEventListener('click', () => {
-                window.open(OS_link, '_blank');
-            });
-
-
-            document.body.appendChild(windowDiv);
-
-
-        }
-
-        function open_music_link() {
-            // display a confirmation dialog
-            const confirmation_div = document.createElement('div');
-            confirmation_div.style.position = 'fixed';
-            confirmation_div.style.top = '50%';
-            confirmation_div.style.left = '50%';
-            confirmation_div.style.transform = 'translate(-50%, -50%)';
-            confirmation_div.style.background = 'rgba(0, 0, 0, 0.8)';
-            confirmation_div.style.border = '2px solid #fff';
-            confirmation_div.style.borderRadius = '10px';
-            confirmation_div.style.padding = '1rem';
-            confirmation_div.style.zIndex = '1000';
-
-            confirmation_div.innerHTML = `
-                <p style="color: #fff; text-align: center;">My music playlist, full of random things I love that no one knows.</p>
-                <div style="text-align: center; margin-top: 1rem;">
-                    <button id="confirm-yes" style="background: #4caf50; border: none; color: #fff; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; margin-right: 1rem;">Yay!</button>
-                    <button id="confirm-no" style="background: #ff4c4c; border: none; color: #fff; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">Not now</button>
-                </div>
-            `;
-            document.body.appendChild(confirmation_div);
-            confirmation_div.querySelector('#confirm-yes').addEventListener('click', () => {
-                window.open('https://spotify.link/rndKoZOICXb', '_blank');
-                document.body.removeChild(confirmation_div);
-            });
-            confirmation_div.querySelector('#confirm-no').addEventListener('click', () => {
-                document.body.removeChild(confirmation_div);
-            });
-            }
     </script>
 </body>
 </html>
