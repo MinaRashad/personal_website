@@ -1,0 +1,255 @@
+:root {
+  --bg: #030308;
+  --room-bg: rgba(15, 15, 30, 0.95);
+  --border: #2a2a4a;
+  --border-hi: #7a6aee;
+  --text-dim: #4e4e72;
+  --text-mid: #8080c0;
+  --text: #b0b0d0;
+  --text-hi: #e0e0ff;
+  --accent: #7a6aee;
+  --transition-speed: 0.15s;
+  --node-size: 200px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Courier New', monospace;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+/* --- Starfield & Warp Tunnel --- */
+#starfield {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%);
+  z-index: -1;
+}
+
+body.is-warping #starfield { opacity: 0; }
+
+#warp-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+}
+
+body.is-warping #warp-canvas { opacity: 1; }
+
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  will-change: transform, width, height;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.3); }
+}
+
+/* --- Maze Layout --- */
+#maze-container {
+  position: relative;
+  width: 100vw; height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#maze-stage {
+  position: relative;
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity var(--transition-speed);
+}
+
+#room-view {
+  position: relative;
+  width: var(--node-size);
+  height: var(--node-size);
+  background: var(--room-bg);
+  border: 1px solid var(--border);
+  border-radius: 32px;
+  box-shadow: 0 0 40px rgba(0,0,0,0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 10;
+  text-align: center;
+}
+
+#room-view.is-room { border: 2px solid var(--border-hi); box-shadow: 0 0 20px rgba(122, 106, 238, 0.2); }
+
+.room-image {
+  width: 90px; height: 90px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+/* --- Node Info (Floating Description) --- */
+#node-info {
+  position: absolute;
+  width: 260px;
+  pointer-events: none;
+  z-index: 20;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  text-align: left;
+}
+
+#room-view:hover ~ #node-info,
+#node-info.always-show { opacity: 1; }
+
+.info-name {
+  background: var(--text-hi);
+  color: #000;
+  display: inline-block;
+  padding: 4px 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.info-desc {
+  background: rgba(15, 15, 30, 0.9);
+  color: var(--text-mid);
+  padding: 10px;
+  font-size: 11px;
+  line-height: 1.5;
+  border: 1px solid var(--border);
+}
+
+/* Priority Positions */
+#node-info.pos-bottom { top: calc(50% + 120px); left: 50%; transform: translateX(-50%); }
+#node-info.pos-top    { bottom: calc(50% + 120px); left: 50%; transform: translateX(-50%); }
+#node-info.pos-right  { left: calc(50% + 120px); top: 50%; transform: translateY(-50%); }
+#node-info.pos-left   { right: calc(50% + 120px); top: 50%; transform: translateY(-50%); }
+
+#node-info.pos-corner {
+  top: calc(50% + 110px);
+  left: calc(50% + 110px);
+}
+
+/* Arrow for the corner case */
+#node-info.pos-corner::before {
+  content: '↖';
+  position: absolute;
+  top: -25px;
+  left: -15px;
+  color: var(--accent);
+  font-size: 24px;
+  font-weight: bold;
+  text-shadow: 0 0 10px var(--accent);
+}
+
+/* Clean up old room-desc */
+.room-desc { display: none; }
+.room-name { display: none; }
+@keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+/* --- Corridor Lines --- */
+.corridor-line {
+  position: absolute;
+  z-index: 5;
+  display: none;
+}
+.corridor-line.active { display: block; }
+
+.corridor-line.north, .corridor-line.south {
+  width: 2px; 
+  height: 200vh; /* Extremely long to stay visible during 100vh shifts */
+  left: 50%; 
+  transform: translateX(-50%);
+}
+.corridor-line.north { 
+  bottom: calc(50% + var(--node-size)/2); 
+  background: linear-gradient(to top, var(--accent) 0%, var(--accent) 10%, transparent 100%); 
+}
+.corridor-line.south { 
+  top: calc(50% + var(--node-size)/2); 
+  background: linear-gradient(to bottom, var(--accent) 0%, var(--accent) 10%, transparent 100%); 
+}
+
+.corridor-line.east, .corridor-line.west {
+  height: 2px; 
+  width: 200vw; 
+  top: 50%; 
+  transform: translateY(-50%);
+}
+.corridor-line.east { 
+  left: calc(50% + var(--node-size)/2); 
+  background: linear-gradient(to right, var(--accent) 0%, var(--accent) 10%, transparent 100%); 
+}
+.corridor-line.west { 
+  right: calc(50% + var(--node-size)/2); 
+  background: linear-gradient(to left, var(--accent) 0%, var(--accent) 10%, transparent 100%); 
+}
+
+/* --- Corridor Signs (World Space) --- */
+.corridor-sign {
+  position: absolute;
+  color: #fff; /* White text for maximum contrast */
+  font-size: 14px; /* Larger font */
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 6;
+  background: var(--accent); /* Solid accent color background */
+  color: #000; /* Black text on accent background for high contrast */
+  padding: 6px 12px;
+  border-radius: 4px;
+  box-shadow: 0 0 20px var(--accent); /* Glow effect */
+}
+
+.corridor-sign.active { opacity: 0.9; }
+
+/* Adjusted positions to be further out and clearer */
+.corridor-sign.north { bottom: calc(50% + 150px); left: 50%; transform: translateX(-50%); }
+.corridor-sign.south { top: calc(50% + 150px); left: 50%; transform: translateX(-50%); }
+.corridor-sign.east { left: calc(50% + 150px); top: 50%; transform: translateY(-50%); }
+.corridor-sign.west { right: calc(50% + 150px); top: 50%; transform: translateY(-50%); }
+
+/* Remove old nav hint styles */
+.nav-hint { display: none; }
+
+/* --- UI --- */
+#ui { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; padding: 25px; display: flex; flex-direction: column; justify-content: space-between; z-index: 100; }
+.stat { font-size: 10px; color: var(--text-dim); }
+
+/* --- Transitions --- */
+.exit-north { transform: translateY(100vh); opacity: 0; }
+.exit-south { transform: translateY(-100vh); opacity: 0; }
+.exit-east { transform: translateX(-100vw); opacity: 0; }
+.exit-west { transform: translateX(100vw); opacity: 0; }
+
+.enter-north { transform: translateY(-100vh); opacity: 0; }
+.enter-south { transform: translateY(100vh); opacity: 0; }
+.enter-east { transform: translateX(100vw); opacity: 0; }
+.enter-west { transform: translateX(-100vw); opacity: 0; }
