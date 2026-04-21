@@ -90,6 +90,8 @@ const locName = document.getElementById('loc-name');
 const warpCanvas = document.getElementById('warp-canvas');
 const warpCtx = warpCanvas.getContext('2d');
 
+const transitionSfx = document.getElementById('transition_sfx');
+
 let warpActive = false;
 let warpStars = [];
 
@@ -248,6 +250,8 @@ async function move(direction) {
   document.body.classList.add('is-warping');
 
   // 2. Snap EXIT current room
+  transitionSfx.currentTime = 0;
+  transitionSfx.play();
   mazeStage.classList.add(`exit-${direction}`);
   await new Promise(r => setTimeout(r, slideTime));
 
