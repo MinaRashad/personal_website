@@ -101,7 +101,6 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 40px;
             color: var(--text-mid);
         }
 
@@ -131,6 +130,69 @@
             height: 100%;
             border: none;
         }
+
+        /* Loading State Styles */
+        #chat-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 5;
+        }
+
+        .loading-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite ease-in-out;
+            opacity: 0.6;
+        }
+
+        .loading-text {
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(122, 106, 238, 0.1);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            width: 40%;
+            height: 100%;
+            background: var(--accent);
+            animation: progress 2s infinite linear;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+        }
+
+        /* Fix pulse for icons/placeholder.svg which isn't centered by default in the div */
+        #chat-loader .loading-icon {
+            transform: none;
+            animation: pulse-simple 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse-simple {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        @keyframes progress {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(250%); }
+        }
     </style>
 </head>
 <body>
@@ -140,14 +202,17 @@
     <div id="chat-container">
         <div class="chat-header">
             <div class="chat-title">COMM_LINK_v1.0</div>
-            <div class="chat-status">● ONLINE</div>
+            <div class="chat-status" id="conn-status">● CONNECTING</div>
         </div>
         
         <div class="chat-placeholder">
-            <iframe src="https://iframe.chat/embed?chat=10147650" id="chattable"></iframe>
+            <div id="chat-loader">
+                <img src="../icons/placeholder.svg" alt="Loading" class="loading-icon">
+                <div class="loading-text">SYNCING SIGNAL...</div>
+                <div class="loading-bar"><div class="loading-progress"></div></div>
+            </div>
+            <iframe src="https://iframe.chat/embed?chat=10147650" id="chattable" style="opacity: 0; transition: opacity 0.5s;"></iframe>
         </div>
-
-
 
         <div class="chat-footer">
             SECURE CHANNEL // ENCRYPTION: AES-256-GCM
@@ -170,6 +235,19 @@
             }
         }
         createStars();
+
+        // Handle iframe loading
+        const iframe = document.getElementById('chattable');
+        const loader = document.getElementById('chat-loader');
+        const status = document.getElementById('conn-status');
+
+        iframe.onload = function() {
+            loader.style.display = 'none';
+            iframe.style.opacity = '1';
+            status.textContent = '● ONLINE';
+            status.style.color = '#00ff00';
+            status.style.animation = 'none';
+        };
     </script>
 </body>
 </html>
