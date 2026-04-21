@@ -1,0 +1,44 @@
+/* Font Definitions */
+@font-face {
+    font-family: 'Arcade';
+    src: url('fonts/karmatic-arcade/ka1.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Pixel';
+    src: url('fonts/lower-pixel/LowresPixel-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Merchant';
+    src: url('fonts/merchant-copy/Merchant Copy.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Font Classes */
+.font-arcade {
+    font-family: 'Arcade', cursive;
+}
+
+.font-pixel {
+    font-family: 'Pixel', sans-serif;
+    image-rendering: pixelated;
+}
+
+.font-merchant {
+    font-family: 'Merchant', monospace;
+}
+
+/* Global defaults for testing */
+h1, h2, h3 {
+    font-family: 'Arcade', cursive;
+}
+
+body {
+    font-family: 'Pixel', sans-serif;
+}

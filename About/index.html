@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Life in Motion - Portfolio</title>
+    <link rel="stylesheet" href="../fonts.css">
     <style>
         * {
             margin: 0;
@@ -12,7 +13,6 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #000;
             color: #fff;
             overflow-x: hidden;
@@ -32,7 +32,7 @@
         .star {
             position: absolute;
             background: white;
-            border-radius: 50%;
+            border-radius: 0;
             animation: twinkle 3s infinite;
         }
 
@@ -52,25 +52,56 @@
         }
 
         .hero h1 {
-            font-size: 4rem;
+            font-size: 5rem;
             margin-bottom: 1rem;
             opacity: 0;
-            animation: fadeInUp 1s forwards 0.3s;
+            animation: fadeInUp 1s forwards 0.3s, titleFloat 3s ease-in-out infinite alternate;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            color: #fff;
+            position: relative;
+        }
+
+        @keyframes titleFloat {
+            0% { 
+                transform: translateY(0); 
+                text-shadow: 4px 4px 0px #667eea, 0 0 20px rgba(102, 126, 234, 0.5); 
+            }
+            100% { 
+                transform: translateY(-15px); 
+                text-shadow: 4px 19px 0px rgba(102, 126, 234, 0.2), 0 0 40px rgba(255, 215, 0, 0.4); 
+            }
         }
 
         .hero p {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             opacity: 0;
             animation: fadeInUp 1s forwards 0.6s;
+            color: #ffd700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         .scroll-indicator {
             position: absolute;
-            bottom: 2rem;
-            font-size: 2rem;
-            animation: bounce 2s infinite;
+            bottom: 3rem;
+            font-size: 1rem;
             opacity: 0;
-            animation: fadeInBounce 1s forwards 1s;
+            animation: fadeInBounce 1s forwards 1s, blink 1.5s infinite;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+        }
+
+        .scroll-indicator::before {
+            content: "[ ";
+        }
+        .scroll-indicator::after {
+            content: " ]";
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
         }
 
         @keyframes fadeInUp {
@@ -116,8 +147,8 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            width: 4px;
-            background: rgba(255, 255, 255, 0.3);
+            width: 2px;
+            background: rgba(255, 255, 255, 0.5);
             top: 0;
             bottom: 0;
         }
@@ -142,36 +173,36 @@
 
         .event-content {
             width: 45%;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
             padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0;
+            box-shadow: 8px 8px 0px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
         }
 
         .event-content:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2);
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px rgba(255, 255, 255, 0.2);
         }
 
         .event-dot {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             background: #fff;
-            border-radius: 50%;
-            border: 4px solid #667eea;
+            border-radius: 0;
+            border: 2px solid #667eea;
             z-index: 10;
             transition: all 0.3s ease;
         }
 
         .timeline-event:hover .event-dot {
-            transform: translateX(-50%) scale(1.5);
+            transform: translateX(-50%) scale(1.5) rotate(45deg);
             background: #ffd700;
         }
 
@@ -186,10 +217,11 @@
             font-size: 1.5rem;
             margin-bottom: 1rem;
             font-weight: 600;
+            text-transform: uppercase;
         }
 
         .event-description {
-            font-size: 1rem;
+            font-size: 0.9rem;
             line-height: 1.6;
             margin-bottom: 1rem;
             color: rgba(255, 255, 255, 0.9);
@@ -198,14 +230,15 @@
         .event-media {
             width: 100%;
             height: 200px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 3rem;
             margin-top: 1rem;
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .event-media img {
@@ -222,18 +255,21 @@
         }
 
         .tag {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
             padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
+            border-radius: 0;
+            font-size: 0.75rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
         }
 
         .fun-fact {
             margin-top: 1rem;
             padding: 1rem;
-            background: rgba(255, 215, 0, 0.1);
-            border-radius: 8px;
-            font-size: 0.9rem;
+            background: rgba(255, 215, 0, 0.05);
+            border-radius: 0;
+            font-size: 0.8rem;
+            border-left: 4px solid #ffd700;
         }
 
         .fun-fact strong {
@@ -292,8 +328,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(2px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -307,14 +343,14 @@
         }
 
         .modal-content {
-            background: rgba(20, 20, 40, 0.95);
-            border: 2px solid rgba(255, 215, 0, 0.5);
-            border-radius: 20px;
+            background: #0a0a1a;
+            border: 2px solid #ffd700;
+            border-radius: 0;
             padding: 2rem;
             max-width: 500px;
             text-align: center;
             animation: scaleIn 0.3s ease;
-            box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);
+            box-shadow: 10px 10px 0px rgba(255, 215, 0, 0.2);
         }
 
         @keyframes scaleIn {
@@ -330,7 +366,7 @@
 
         .modal-message {
             color: #fff;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             margin-bottom: 2rem;
             line-height: 1.6;
         }
@@ -343,43 +379,49 @@
 
         .modal-button {
             padding: 0.8rem 2rem;
-            border: none;
-            border-radius: 10px;
+            border: 1px solid #fff;
+            border-radius: 0;
             font-size: 1rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             font-weight: 600;
+            font-family: inherit;
+            text-transform: uppercase;
         }
 
         .modal-button.yes {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff;
+            background: #ffd700;
+            color: #000;
+            border-color: #ffd700;
         }
 
         .modal-button.yes:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px rgba(255, 215, 0, 0.4);
         }
 
         .modal-button.no {
-            background: rgba(255, 255, 255, 0.1);
+            background: transparent;
             color: #fff;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
         .modal-button.no:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px rgba(255, 255, 255, 0.2);
         }
 
         .footer {
             text-align: center;
             padding: 3rem 2rem;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .footer h2 {
             margin-bottom: 1rem;
+            text-transform: uppercase;
         }
 
         .contact-links {
@@ -392,13 +434,15 @@
         .contact-links a {
             color: #ffd700;
             text-decoration: none;
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
+            font-size: 1rem;
+            transition: transform 0.2s ease;
             display: inline-block;
+            border-bottom: 1px solid transparent;
         }
 
         .contact-links a:hover {
-            transform: scale(1.2);
+            transform: scale(1.1);
+            border-bottom-color: #ffd700;
         }
 
         @media (max-width: 768px) {
@@ -439,7 +483,7 @@
     <div class="hero">
         <h1>My life</h1>
         <p>-By Mina Eskandar (me)</p>
-        <div class="scroll-indicator">↓</div>
+        <div class="scroll-indicator">SCROLL TO START</div>
     </div>
 
     <div class="timeline-container">
@@ -584,23 +628,51 @@
         // Create starfield
         function createStars() {
             const starsContainer = document.getElementById('stars');
-            const numStars = 200;
+            const numStars = 400;
+            const vh = window.innerHeight;
             
             for (let i = 0; i < numStars; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
                 
-                const size = Math.random() * 3;
+                const size = Math.random() * 2 + 1;
                 star.style.width = size + 'px';
                 star.style.height = size + 'px';
                 star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
+                
+                // Use a fixed initial Y position
+                const y = Math.random() * vh;
+                star.style.top = '0';
+                star.style.transform = `translateY(${y}px)`;
+                star.setAttribute('data-y', y);
+                
                 star.style.animationDelay = Math.random() * 3 + 's';
                 star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                
+                // Varying speeds for depth
+                star.setAttribute('data-speed', Math.random() * 0.2 + 0.05);
                 
                 starsContainer.appendChild(star);
             }
         }
+
+        // Parallax stars with infinite wrapping
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const stars = document.querySelectorAll('.star');
+            const vh = window.innerHeight;
+            
+            stars.forEach(star => {
+                const speed = parseFloat(star.getAttribute('data-speed'));
+                const initialY = parseFloat(star.getAttribute('data-y'));
+                
+                // Calculate new Y with modulo to wrap around the viewport
+                let yPos = (initialY - (scrolled * speed)) % vh;
+                if (yPos < 0) yPos += vh;
+                
+                star.style.transform = `translateY(${yPos}px)`;
+            });
+        });
 
         // Render timeline events
         function renderTimeline() {
@@ -612,7 +684,7 @@
                 eventDiv.setAttribute('data-year', event.year);
                 
                 let tagsHTML = event.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
-                let funFactHTML = event.funFact ? `<div class="fun-fact"><strong>${event.funFact}</strong></div>` : '';
+                let funFactHTML = event.funFact ? `<div class="fun-fact font-merchant"><strong>${event.funFact}</strong></div>` : '';
                 
                 // Check if media is a URL (image) or emoji/text
                 let mediaHTML;
@@ -721,16 +793,16 @@
             windowDiv.style.height = '80%';
             windowDiv.style.background = 'rgba(0, 0, 0, 0.9)';
             windowDiv.style.border = '2px solid rgba(255, 215, 0, 0.5)';
-            windowDiv.style.borderRadius = '10px';
+            windowDiv.style.borderRadius = '0';
             windowDiv.style.zIndex = '2000';
             windowDiv.style.padding = '1rem';
             windowDiv.style.overflow = 'auto';
 
             windowDiv.innerHTML = `
-                <h2 style="color: #fff; text-align: center; margin-bottom: 1rem;">${title}</h2>
-                <iframe src="${url}" style="width: 100%; height: 90%; border: none; border-radius: 10px;"></iframe>
-                <button id="close-window" style="position: absolute; top: 10px; right: 10px; background: #ff4c4c; border: none; color: #fff; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">✕</button>
-                <button id="open-externally" style="position: absolute; top: 10px; left: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: #fff; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer;">↗ Open Externally</button>
+                <h2 style="color: #fff; text-align: center; margin-bottom: 1rem; text-transform: uppercase;">${title}</h2>
+                <iframe src="${url}" style="width: 100%; height: 90%; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0;"></iframe>
+                <button id="close-window" style="position: absolute; top: 10px; right: 10px; background: #ff4c4c; border: 1px solid #fff; color: #fff; padding: 0.5rem 1rem; border-radius: 0; cursor: pointer; font-family: inherit;">✕</button>
+                <button id="open-externally" style="position: absolute; top: 10px; left: 10px; background: #ffd700; border: 1px solid #000; color: #000; padding: 0.5rem 1rem; border-radius: 0; cursor: pointer; font-family: inherit; font-weight: bold;">↗ OPEN EXTERNALLY</button>
             `;
             
             windowDiv.querySelector('#close-window').addEventListener('click', () => {

@@ -21,7 +21,6 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Courier New', monospace;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
@@ -51,7 +50,7 @@ body.is-warping #warp-canvas { opacity: 1; }
 .star {
   position: absolute;
   background: white;
-  border-radius: 50%;
+  border-radius: 0;
   will-change: transform, width, height;
 }
 
@@ -86,8 +85,8 @@ body.is-warping #warp-canvas { opacity: 1; }
   height: var(--node-size);
   background: var(--room-bg);
   border: 1px solid var(--border);
-  border-radius: 32px;
-  box-shadow: 0 0 40px rgba(0,0,0,0.8);
+  border-radius: 0;
+  box-shadow: 12px 12px 0px rgba(0,0,0,0.8);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -97,12 +96,12 @@ body.is-warping #warp-canvas { opacity: 1; }
   text-align: center;
 }
 
-#room-view.is-room { border: 2px solid var(--border-hi); box-shadow: 0 0 20px rgba(122, 106, 238, 0.2); }
+#room-view.is-room { border: 2px solid var(--border-hi); box-shadow: 12px 12px 0px rgba(122, 106, 238, 0.2); }
 
 .room-image {
   width: 90px; height: 90px;
   object-fit: cover;
-  border-radius: 50%;
+  border-radius: 0;
   border: 1px solid var(--border);
   margin-bottom: 12px;
 }
@@ -224,7 +223,7 @@ body.is-warping #warp-canvas { opacity: 1; }
   background: var(--accent); /* Solid accent color background */
   color: #000; /* Black text on accent background for high contrast */
   padding: 6px 12px;
-  border-radius: 4px;
+  border-radius: 0;
   box-shadow: 0 0 20px var(--accent); /* Glow effect */
 }
 
