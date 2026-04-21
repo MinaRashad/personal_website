@@ -12,6 +12,33 @@
             box-sizing: border-box;
         }
 
+        /* Back Button Style */
+        .back-to-map {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 10px 15px;
+            text-decoration: none;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 4px 4px 0px rgba(255, 215, 0, 0.2);
+        }
+
+        .back-to-map:hover {
+            background: #ffd700;
+            color: #000;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px rgba(255, 215, 0, 0.4);
+        }
+
         body {
             background: #000;
             color: #fff;
@@ -60,6 +87,7 @@
             letter-spacing: 8px;
             color: #fff;
             position: relative;
+            font-family: arcade, cursive;
         }
 
         @keyframes titleFloat {
@@ -488,6 +516,7 @@
     </style>
 </head>
 <body>
+    <a href="../index.html" class="back-to-map">&lt; RETURN TO MAP</a>
     <div class="stars" id="stars"></div>
     
     <div class="hero">
@@ -535,11 +564,11 @@
                 noText: 'Not now'
             },
             'github': {
-                emoji: '🐙',
-                message: 'My GitHub profile with most of my projects. Check it out?',
+                image: '../icons/FOSS_daemon.png',
+                message: 'Sell your soul to the FOSS demon and check out my GitHub repos.',
                 link: 'https://github.com/MinaRashad/',
-                yesText: 'Show me the code!',
-                noText: 'Pass'
+                yesText: 'I\'ll take the deal',
+                noText: 'Maybe later'
             },
             'telegram': {
                 image: '../icons/plane.png',

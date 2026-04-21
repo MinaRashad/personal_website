@@ -35,9 +35,9 @@
 }
 
 /* Global defaults for testing */
-h1, h2, h3 {
+/* h1, h2, h3 {
     font-family: 'Arcade', cursive;
-}
+} */
 
 body {
     font-family: 'Pixel', sans-serif;

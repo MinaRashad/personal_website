@@ -1,35 +1,6 @@
+// map of nodes and exits
 const MAZE = {
   rooms: {
-    'corner_nw': {
-      type: 'corridor',
-      name: 'Central Nexus',
-      desc: 'The heart of the upper quadrant. Corridors extend in every direction from this high-traffic hub.',
-      exits: {
-        east: { to: 'corner_ne', note: 'Bridge Access' },
-        south: { to: 'about_node', note: 'Personnel Files' },
-        north: { to: 'corner_ne', note: 'Overhead Storage' },
-        west: { to: 'about_node', note: 'Waste Management' }
-      }
-    },
-    'corner_ne': {
-      type: 'corridor',
-      name: 'North-East Hub',
-      desc: 'The transit hub for heavy machinery and engine maintenance. Watch your step around the gravity vents.',
-      exits: {
-        west: { to: 'corner_nw', note: 'Storage' },
-        south: { to: 'corner_se', note: 'Engine Room' }
-      }
-    },
-    'corner_se': {
-      type: 'corridor',
-      name: 'South-East Terminal',
-      desc: 'Direct access to the main reactor and life support. The air feels thicker here.',
-      exits: {
-        north: { to: 'corner_ne', note: 'Bridge' },
-        west: { to: 'about_node', note: 'Crew Quarters' }
-      }
-    },
-
     'about_node': {
       type: 'room',
       name: 'About Mina',
@@ -37,8 +8,17 @@ const MAZE = {
       image: 'About/cat.gif',
       href: 'About/index.html',
       exits: {
-        north: { to: 'corner_nw', note: 'Maintenance' },
-        east: { to: 'corner_se', note: 'Reactor' }
+        south: { to: 'blog_node', note: 'Terminal Log' }
+      }
+    },
+    'blog_node': {
+      type: 'room',
+      name: 'Terminal Logs',
+      desc: 'Access decentralized data logs and personal transmissions.',
+      image: 'icons/Logs.png',
+      href: 'Blog/index.html',
+      exits: {
+        north: { to: 'about_node', note: 'Archive' }
       }
     }
   }
@@ -53,6 +33,11 @@ window.MAZE_CONFIG = {
 
 
 let currentRoomId = 'about_node';
+// check if currentRoomId is stored and valid
+if (window.localStorage.getItem('currentRoomId') && MAZE.rooms[window.localStorage.getItem('currentRoomId')]) {
+  currentRoomId = window.localStorage.getItem('currentRoomId');
+}
+
 let isTransitioning = false;
 let starOffset = { x: 0, y: 0 };
 
@@ -237,6 +222,9 @@ async function move(direction) {
   mazeStage.style.transition = 'none';
   mazeStage.classList.remove(...dirs.map(d => `exit-${d}`));
   mazeStage.classList.add(`enter-${direction}`);
+
+  // save currentRoomId to localStorage
+  window.localStorage.setItem('currentRoomId', currentRoomId);
   
   renderRoom(currentRoomId);
   mazeStage.offsetHeight; 

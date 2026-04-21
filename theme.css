@@ -99,7 +99,8 @@ body.is-warping #warp-canvas { opacity: 1; }
 #room-view.is-room { border: 2px solid var(--border-hi); box-shadow: 12px 12px 0px rgba(122, 106, 238, 0.2); }
 
 .room-image {
-  width: 90px; height: 90px;
+  width: 96px; height: 96px;
+  image-rendering: pixelated;
   object-fit: cover;
   border-radius: 0;
   border: 1px solid var(--border);
