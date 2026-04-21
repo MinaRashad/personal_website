@@ -268,7 +268,7 @@
             padding: 1rem;
             background: rgba(255, 215, 0, 0.05);
             border-radius: 0;
-            font-size: 0.8rem;
+            font-size: 1.5rem;
             border-left: 4px solid #ffd700;
         }
 
@@ -277,16 +277,26 @@
         }
 
         .floating-artifact {
-            font-size: 2rem;
             position: absolute;
             cursor: pointer;
             transition: transform 0.3s ease, filter 0.3s ease;
             z-index: 0;
             filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .floating-artifact img {
+            width: 64px;
+            height: 64px;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
         }
 
         .floating-artifact:hover {
-            transform: scale(1.2);
+            transform: scale(1.1);
             filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
         }
 
@@ -511,14 +521,14 @@
         // Artifacts data
         const artifactsData = {
             'music': {
-                emoji: '🎵',
+                image: '../icons/Music.png',
                 message: 'My music playlist, full of random things I love that no one knows about.',
                 link: 'https://spotify.link/rndKoZOICXb',
                 yesText: 'Yay',
                 noText: 'Nay'
             },
             'webSystem': {
-                emoji: '🖥️',
+                image: '../icons/computer.png',
                 message: 'My custom web-based operating system. A fun experiment in browser UI.',
                 link: 'https://minarashad.github.io/web_system/',
                 yesText: 'Boot it up!',
@@ -532,7 +542,7 @@
                 noText: 'Pass'
             },
             'telegram': {
-                emoji: '✈️',
+                image: '../icons/plane.png',
                 message: 'Hit me up on Telegram.',
                 link: 'https://t.me/Minatherobot',
                 yesText: 'Let\'s talk!',
@@ -727,7 +737,7 @@
                 const data = artifactsData[key];
                 const div = document.createElement('div');
                 div.className = 'floating-artifact';
-                div.textContent = data.emoji;
+                div.innerHTML = data.image ? `<img src="${data.image}" alt="${key}">` : data.emoji;
                 
                 // Set random starting position
                 if (positions[index].top) div.style.top = positions[index].top;
@@ -751,7 +761,8 @@
             
             overlay.innerHTML = `
                 <div class="modal-content">
-                    <div class="modal-emoji">${data.emoji}</div>
+                    ${data.image ? `<img src="${data.image}" alt="${artifactKey}" style="width: 96px; height: 96px; margin-bottom: 1rem; image-rendering: pixelated; image-rendering: -moz-crisp-edges; image-rendering: crisp-edges;">` : ''}
+                    ${!data.image ? `<div class="modal-emoji">${data.emoji}</div>` : ''}
                     <div class="modal-message">${data.message}</div>
                     <div class="modal-buttons">
                         <button class="modal-button yes" id="modal-yes">${data.yesText}</button>
