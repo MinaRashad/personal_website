@@ -1,0 +1,8 @@
+:root {
+  --advanced-layout: true;
+}
+
+#top_banner {
+    display: none;
+}
+
