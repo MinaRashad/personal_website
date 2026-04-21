@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Chat - Mina Eskandar</title>
+    <link rel="stylesheet" href="../fonts.css">
+    <link rel="stylesheet" href="../theme.css">
+    <script src="https://iframe.chat/scripts/main.min.js"></script>
+
+    <style>
+        :root {
+            --chat-bg: rgba(15, 15, 30, 0.95);
+        }
+
+        body {
+            background: #000;
+            color: var(--text);
+            font-family: Pixel, Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .back-to-map {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 4px 4px 0px rgba(122, 106, 238, 0.2);
+        }
+
+        .back-to-map:hover {
+            background: var(--accent);
+            color: #000;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px rgba(122, 106, 238, 0.4);
+        }
+
+        #chat-container {
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            background: var(--chat-bg);
+            border: 2px solid var(--border-hi);
+            box-shadow: 12px 12px 0px rgba(122, 106, 238, 0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .chat-header {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(122, 106, 238, 0.1);
+        }
+
+        .chat-title {
+            font-family: arcade, cursive;
+            font-size: 1.2rem;
+            color: var(--text-hi);
+            letter-spacing: 2px;
+        }
+
+        .chat-status {
+            font-size: 0.8rem;
+            color: #00ff00;
+            text-transform: uppercase;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0.3; }
+        }
+
+        .chat-placeholder {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+            color: var(--text-mid);
+        }
+
+        .chat-footer {
+            padding: 15px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+        }
+
+        #starfield {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%);
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="starfield"></div>
+    <a href="../index.html" class="back-to-map">&lt; RETURN TO MAP</a>
+
+    <div id="chat-container">
+        <div class="chat-header">
+            <div class="chat-title">COMM_LINK_v1.0</div>
+            <div class="chat-status">● ONLINE</div>
+        </div>
+        
+        <div class="chat-placeholder">
+            <iframe src="https://iframe.chat/embed?chat=10147650" id="chattable"></iframe>
+        </div>
+
+        <script>
+            chattable.initialize({
+                stylesheet: "chattable.css",
+            });
+        </script>
+
+        <div class="chat-footer">
+            SECURE CHANNEL // ENCRYPTION: AES-256-GCM
+        </div>
+    </div>
+
+    <script>
+        function createStars() {
+            const starfield = document.getElementById('starfield');
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 2 + 0.5;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.opacity = 0.2 + Math.random() * 0.8;
+                starfield.appendChild(star);
+            }
+        }
+        createStars();
+    </script>
+</body>
+</html>

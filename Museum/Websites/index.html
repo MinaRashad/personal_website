@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Museum - Websites - Mina Eskandar</title>
+    <link rel="stylesheet" href="../../fonts.css">
+    <link rel="stylesheet" href="../../theme.css">
+    <style>
+        body {
+            background: #000;
+            color: var(--text);
+            font-family: Pixel, Courier, monospace;
+            min-height: 100vh;
+            margin: 0;
+            padding: 80px 20px;
+        }
+
+        .back-to-museum {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 4px 4px 0px rgba(122, 106, 234, 0.2);
+        }
+
+        .back-to-museum:hover {
+            background: var(--accent);
+            color: #000;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px rgba(122, 106, 234, 0.4);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: var(--text-hi);
+            text-shadow: 0 0 20px var(--accent);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .content-area {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(15, 15, 30, 0.8);
+            border: 1px solid var(--border);
+            padding: 40px;
+            min-height: 400px;
+        }
+
+        .placeholder-box {
+            border: 1px dashed var(--text-dim);
+            padding: 40px;
+            text-align: center;
+            color: var(--text-dim);
+        }
+
+        #starfield {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%);
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="starfield"></div>
+    <a href="../index.html" class="back-to-museum">&lt; BACK TO MUSEUM</a>
+
+    <header>
+        <h1>Websites</h1>
+    </header>
+
+    <div class="content-area">
+        <div class="placeholder-box">
+            <p>DATA STREAM PENDING...</p>
+            <p style="margin-top: 20px; font-size: 0.8rem;">DUMP IMAGES, LISTS, OR LINKS HERE.</p>
+        </div>
+    </div>
+
+    <script>
+        function createStars() {
+            const starfield = document.getElementById('starfield');
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 2 + 0.5;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.opacity = 0.2 + Math.random() * 0.8;
+                starfield.appendChild(star);
+            }
+        }
+        createStars();
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,7 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#0f0f1e" stroke="#2a2a4a" stroke-width="4"/>
+  <line x1="0" y1="0" x2="200" y2="200" stroke="#2a2a4a" stroke-width="2"/>
+  <line x1="200" y1="0" x2="0" y2="200" stroke="#2a2a4a" stroke-width="2"/>
+  <rect x="60" y="85" width="80" height="30" fill="#1a1a2e" stroke="#7a6aee" stroke-width="2"/>
+  <text x="100" y="105" dominant-baseline="middle" text-anchor="middle" fill="#7a6aee" font-family="monospace" font-size="12" font-weight="bold">NO_SIGNAL</text>
+</svg>

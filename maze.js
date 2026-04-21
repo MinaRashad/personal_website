@@ -8,8 +8,30 @@ const MAZE = {
       image: 'About/cat.gif',
       href: 'About/index.html',
       exits: {
+        north: { to: 'museum_node', note: 'The Museum' },
         south: { to: 'blog_node', note: 'Terminal Log' },
-        east: { to: 'projects_node_1', note: 'Projects' }
+        east: { to: 'projects_node_1', note: 'Projects' },
+        west: { to: 'chat_node', note: 'Live Chat' }
+      }
+    },
+    'chat_node': {
+      type: 'room',
+      name: 'Live Chat',
+      desc: 'Establish a real-time communication link with Mina.',
+      image: 'icons/plane.png',
+      href: 'Chat/index.html',
+      exits: {
+        east: { to: 'about_node', note: 'Back to Archive' }
+      }
+    },
+    'museum_node': {
+      type: 'room',
+      name: 'The Museum',
+      desc: 'A curated collection of physical and digital artifacts.',
+      image: 'icons/scroll.png',
+      href: 'Museum/index.html',
+      exits: {
+        south: { to: 'about_node', note: 'Back to Archive' }
       }
     },
     'projects_node_1': {
@@ -41,6 +63,17 @@ const MAZE = {
       href: 'Blog/index.html',
       exits: {
         north: { to: 'about_node', note: 'Archive' },
+        south: { to: 'neighbours_node', note: 'Net Neighbours' }
+      }
+    },
+    'neighbours_node': {
+      type: 'room',
+      name: 'Net Neighbours',
+      desc: 'Nearby nodes in the decentralized web.',
+      image: 'icons/computer.png',
+      href: 'Neighbours/index.html',
+      exits: {
+        north: { to: 'blog_node', note: 'Back to Logs' }
       }
     },
     'incident_node': {

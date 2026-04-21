@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Museum of Curiosities - Mina Eskandar</title>
+    <link rel="stylesheet" href="../fonts.css">
+    <link rel="stylesheet" href="../theme.css">
+    <style>
+        body {
+            background: #000;
+            color: var(--text);
+            font-family: Pixel, Courier, monospace;
+            min-height: 100vh;
+            margin: 0;
+            padding: 80px 20px;
+        }
+
+        .back-to-map {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 4px 4px 0px rgba(122, 106, 238, 0.2);
+        }
+
+        .back-to-map:hover {
+            background: var(--accent);
+            color: #000;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px rgba(122, 106, 238, 0.4);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-family: arcade, cursive;
+            font-size: 3rem;
+            color: var(--text-hi);
+            text-shadow: 0 0 20px var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .museum-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .museum-item {
+            background: rgba(15, 15, 30, 0.8);
+            border: 1px solid var(--border);
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .museum-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(122, 106, 238, 0.1);
+        }
+
+        .museum-thumbnail {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+            margin-bottom: 15px;
+            opacity: 0.7;
+            background: #050510;
+        }
+
+        .museum-item h2 {
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            text-transform: uppercase;
+            width: 100%;
+        }
+
+        .item-content {
+            font-size: 0.9rem;
+            color: var(--text-mid);
+            line-height: 1.6;
+        }
+
+        .placeholder-text {
+            font-style: italic;
+            opacity: 0.6;
+        }
+
+        #starfield {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%);
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="starfield"></div>
+    <a href="../index.html" class="back-to-map">&lt; RETURN TO MAP</a>
+
+    <header>
+        <h1>THE MUSEUM</h1>
+        <p>A collection of artifacts, digital and physical, that define my trajectory.</p>
+    </header>
+
+    <div class="museum-grid">
+        <a href="Coins/index.html" class="museum-item">
+            <img src="../icons/placeholder.svg" class="museum-thumbnail" alt="Old Coins">
+            <h2>Old Coins</h2>
+            <div class="item-content">
+                <p class="placeholder-text">Artifacts from a time before digital currency. Physical proof of history's passage.</p>
+            </div>
+        </a>
+
+        <a href="Cards/index.html" class="museum-item">
+            <img src="../icons/placeholder.svg" class="museum-thumbnail" alt="Trading Cards">
+            <h2>Trading Cards</h2>
+            <div class="item-content">
+                <p class="placeholder-text">Strategic patterns and art trapped in cardboard. Memories of duels and trades.</p>
+            </div>
+        </a>
+
+        <a href="Books/index.html" class="museum-item">
+            <img src="../icons/placeholder.svg" class="museum-thumbnail" alt="Books">
+            <h2>Books</h2>
+            <div class="item-content">
+                <p class="placeholder-text">De-serialized data in paper format. The foundations of my knowledge base.</p>
+            </div>
+        </a>
+
+        <a href="Photos/index.html" class="museum-item">
+            <img src="../icons/placeholder.svg" class="museum-thumbnail" alt="Photos">
+            <h2>Photos</h2>
+            <div class="item-content">
+                <p class="placeholder-text">Static captures of light and time. Visual logs of reality.</p>
+            </div>
+        </a>
+
+        <a href="Music/index.html" class="museum-item">
+            <img src="../icons/placeholder.svg" class="museum-thumbnail" alt="Music">
+            <h2>Music</h2>
+            <div class="item-content">
+                <p class="placeholder-text">Audio waves that resonate with my neural pathways.</p>
+            </div>
+        </a>
+
+        <a href="Websites/index.html" class="museum-item">
+            <img src="../icons/placeholder.svg" class="museum-thumbnail" alt="Websites">
+            <h2>Websites</h2>
+            <div class="item-content">
+                <p class="placeholder-text">Nodes of interest in the global network.</p>
+            </div>
+        </a>
+
+        <a href="Channels/index.html" class="museum-item">
+            <img src="../icons/placeholder.svg" class="museum-thumbnail" alt="Channels">
+            <h2>Channels</h2>
+            <div class="item-content">
+                <p class="placeholder-text">Transmissions from curators of digital content.</p>
+            </div>
+        </a>
+    </div>
+
+    <script>
+        function createStars() {
+            const starfield = document.getElementById('starfield');
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 2 + 0.5;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.opacity = 0.2 + Math.random() * 0.8;
+                starfield.appendChild(star);
+            }
+        }
+        createStars();
+    </script>
+</body>
+</html>
