@@ -8,7 +8,18 @@ const MAZE = {
       image: 'About/cat.gif',
       href: 'About/index.html',
       exits: {
-        south: { to: 'blog_node', note: 'Terminal Log' }
+        south: { to: 'blog_node', note: 'Terminal Log' },
+        east: { to: 'projects_node_1', note: 'Projects' }
+      }
+    },
+    'projects_node_1': {
+      type: 'corridor',
+      name: 'Projects',
+      desc: 'A collection of various projects, experiments, and investigations.',
+      exits: {
+        north: { to: 'incident_node', note: 'INCIDENT' },
+        south: { to: 'homelabbing_node', note: 'Homelab' },
+        west: { to: 'about_node', note: 'About' }
       }
     },
     'blog_node': {
@@ -18,7 +29,27 @@ const MAZE = {
       image: 'icons/Logs.png',
       href: 'Blog/index.html',
       exits: {
-        north: { to: 'about_node', note: 'Archive' }
+        north: { to: 'about_node', note: 'Archive' },
+      }
+    },
+    'incident_node': {
+      type: 'room',
+      name: 'Project INCIDENT',
+      desc: 'A terminal-based investigation puzzle game. Cross-reference documents, chat logs, and internal records to find contradictions. Some files are password protected.',
+      image: 'icons/incident.png',
+      href: 'Projects/INCIDENT/index.html',
+      exits: {
+        south: { to: 'projects_node_1', note: 'Projects' },
+      }
+    },
+    'homelabbing_node': {
+      type: 'room',
+      name: 'Homelabbing',
+      desc: 'Infrastructure and automation projects. Content pending transmission.',
+      image: 'icons/download_the_internet.png',
+      href: '#',
+      exits: {
+        north: { to: 'projects_node_1', note: 'Projects' },
       }
     }
   }
