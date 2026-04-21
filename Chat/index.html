@@ -7,7 +7,11 @@
     <link rel="stylesheet" href="../fonts.css">
     <link rel="stylesheet" href="../theme.css">
     <script src="https://iframe.chat/scripts/main.min.js"></script>
-
+    <script>
+        chattable.initialize({
+            stylesheet: "chattable.css",
+        });
+    </script>
     <style>
         :root {
             --chat-bg: rgba(15, 15, 30, 0.95);
@@ -143,11 +147,7 @@
             <iframe src="https://iframe.chat/embed?chat=10147650" id="chattable"></iframe>
         </div>
 
-        <script>
-            chattable.initialize({
-                stylesheet: "chattable.css",
-            });
-        </script>
+
 
         <div class="chat-footer">
             SECURE CHANNEL // ENCRYPTION: AES-256-GCM
