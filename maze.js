@@ -19,7 +19,18 @@ const MAZE = {
       exits: {
         north: { to: 'incident_node', note: 'INCIDENT' },
         south: { to: 'homelabbing_node', note: 'Homelab' },
+        east: { to: 'Cards of Fate', note: 'Silly Projects ⚠️' },
         west: { to: 'about_node', note: 'About' }
+      }
+    },
+    'Cards of Fate': {
+      type: 'room',
+      name: 'Cards of Fate',
+      image: 'icons/cards.png',
+      desc: 'Using the latest cutting-edge science of the Quantum divination matrix and Aether Resonance, The Cards of Fate will reveal knowledge about any situation, person or object. Simply focus on your question before drawing and go inside to see the truth.',
+      href: 'Projects/CardsOfFate/CoK.html',
+      exits: {
+        west: { to: 'projects_node_1', note: 'Go Back' }
       }
     },
     'blog_node': {
@@ -170,7 +181,7 @@ function renderRoom(roomId) {
   const room = MAZE.rooms[roomId];
   const isRoom = room.type === 'room';
   const nodeInfo = document.getElementById('node-info');
-  
+  locName.textContent = room.name || 'Transit Sector';
   // 1. Render Content
   roomView.className = isRoom ? 'is-room' : '';
   if (isRoom) {
@@ -275,6 +286,7 @@ window.addEventListener('keydown', e => {
     case 'ArrowDown': case 's': move('south'); break;
     case 'ArrowLeft': case 'a': move('west'); break;
     case 'ArrowRight': case 'd': move('east'); break;
+    case 'r': currentRoomId = 'about_node'; renderRoom(currentRoomId); break; // Reset position
     case 'Enter':
       const room = MAZE.rooms[currentRoomId];
       if (room.type === 'room' && room.href) window.location.href = room.href;
