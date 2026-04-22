@@ -23,6 +23,11 @@ body, #background, #input, .allMessages, .msgBody, .senderInfo, .name {
     background-color: #fff !important;
 }
 
+:where(#settings) {
+    border-radius: 10px;
+    background-color: #00ff0e;
+}
+
 #background {
     background-color: #030308 !important;
     background-image: radial-gradient(circle at center, #0a0a1a 0%, #000 100%) !important;
