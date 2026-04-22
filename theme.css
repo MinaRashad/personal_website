@@ -253,3 +253,38 @@ body.is-warping #warp-canvas { opacity: 1; }
 .enter-south { transform: translateY(100vh); opacity: 0; }
 .enter-east { transform: translateX(100vw); opacity: 0; }
 .enter-west { transform: translateX(-100vw); opacity: 0; }
+
+/* --- Mobile Blocker --- */
+#mobile-blocker {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: var(--bg);
+  z-index: 1000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+}
+
+.blocker-title {
+  font-family: arcade, cursive;
+  font-size: 2.5rem;
+  color: #ff4d4d;
+  text-shadow: 0 0 20px #ff0000;
+  margin-bottom: 20px;
+}
+
+.blocker-content p {
+  font-family: Pixel, Courier, monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  max-width: 300px;
+}
+
+@media (max-width: 768px) {
+  #mobile-blocker { display: flex; }
+  #maze-container, #ui, #warp-canvas { display: none !important; }
+}

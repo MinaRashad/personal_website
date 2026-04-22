@@ -91,7 +91,7 @@ const MAZE = {
       name: 'Homelabbing',
       desc: 'Infrastructure and automation projects. Content pending transmission.',
       image: 'icons/download_the_internet.png',
-      href: '#',
+      href: 'Projects/Homelabbing/index.html',
       exits: {
         north: { to: 'projects_node_1', note: 'Projects' },
       }
