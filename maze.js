@@ -17,7 +17,7 @@ const MAZE = {
     'chat_node': {
       type: 'room',
       name: 'Live Chat',
-      desc: 'Establish a real-time communication link with Mina.',
+      desc: 'Check transmission from travelers and crew members.',
       image: 'icons/plane.png',
       href: 'Chat/index.html',
       exits: {
@@ -70,7 +70,7 @@ const MAZE = {
       type: 'room',
       name: 'Net Neighbours',
       desc: 'Nearby nodes in the decentralized web.',
-      image: 'icons/computer.png',
+      image: 'icons/heart.png',
       href: 'Neighbours/index.html',
       exits: {
         north: { to: 'blog_node', note: 'Back to Logs' }

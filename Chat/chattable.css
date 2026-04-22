@@ -19,7 +19,7 @@ body, #background, #input, .allMessages, .msgBody, .senderInfo, .name {
     color: #0f0;
 }
 
-#emojitraytoggle {
+:where(#emojiTrayToggle) {
     background-color: #fff !important;
 }
 
