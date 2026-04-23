@@ -88,7 +88,7 @@
         }
 
         .content-grid {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -121,7 +121,7 @@
             margin-bottom: 12px;
             padding-left: 20px;
             position: relative;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .tech-list li::before {
@@ -132,26 +132,106 @@
         }
 
         .tag {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             padding: 2px 6px;
             margin-left: 8px;
             border: 1px solid var(--border);
             text-transform: uppercase;
         }
 
-        .tag-bare-metal { color: #8080c0; }
-        .tag-local { color: #00ff00; }
-        .tag-emergency { color: #ff4d4d; }
+        .tag-active { color: #00ff00; border-color: #00ff0033; }
+        .tag-secure { color: #ffd700; border-color: #ffd70033; }
+        .tag-offline { color: #7a6aee; border-color: #7a6aee33; }
 
         .future-note {
-            grid-column: 1 / -1;
             background: rgba(122, 106, 238, 0.1);
             border: 1px dashed var(--accent);
             padding: 20px;
             text-align: center;
             font-size: 0.9rem;
             color: var(--text-hi);
-            margin-top: 20px;
+            margin: 30px auto;
+            max-width: 1100px;
+        }
+
+        /* Manifest Section Styles */
+        .manifest-section {
+            max-width: 1100px;
+            margin: 60px auto;
+            border-top: 2px solid var(--border);
+            padding-top: 40px;
+        }
+
+        .manifest-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .manifest-category {
+            background: rgba(10, 10, 20, 0.8);
+            border: 1px solid var(--border);
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.3s;
+        }
+
+        .manifest-category:hover {
+            border-color: var(--accent);
+        }
+
+        .manifest-thumbnail {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border);
+            opacity: 0.5;
+            background: #050510;
+        }
+
+        .manifest-content {
+            padding: 20px;
+        }
+
+        .manifest-content h3 {
+            color: var(--text-hi);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .manifest-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .manifest-list li {
+            font-size: 0.8rem;
+            color: var(--text-mid);
+            margin-bottom: 8px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .manifest-list li::before {
+            content: "·";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .reconstruction-kit {
+            margin-top: 40px;
+            background: rgba(122, 106, 238, 0.05);
+            border: 1px solid var(--border);
+            padding: 20px;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            text-align: center;
         }
 
         #starfield {
@@ -168,7 +248,7 @@
             border-radius: 0;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .content-grid {
                 grid-template-columns: 1fr;
             }
@@ -200,42 +280,44 @@
     </div>
 
     <div class="content-grid">
-        <!-- Knowledge & Entertainment -->
+        <!-- Digital Alexandria (Kiwix) -->
         <div class="node-card">
-            <h2 class="section-title">Knowledge Archive</h2>
+            <h2 class="section-title">Digital Alexandria</h2>
             <p class="node-desc">
-                A dedicated secondary terminal designed for offline resilience. By self-hosting full copies of Wikipedia (Kiwix), personal libraries (Calibre), and media (Kodi), I ensure that critical information and entertainment remain accessible even during network outages. Currently running directly on hardware for maximum performance.
+                Using Kiwix to host a massive collection of ZIM files, creating a "Civilization Starter Kit" that requires zero internet. My archive includes the entire Project Gutenberg library, thousands of repair guides from iFixit, survival manuals (Canadian Prepper), and the complete archives of Stack Exchange (CS, Electronics, Arduino) to ensure that engineering and medical knowledge is never lost.
             </p>
             <ul class="tech-list">
-                <li>Kiwix <span class="tag tag-bare-metal">Knowledge</span></li>
-                <li>Kodi <span class="tag tag-bare-metal">Media</span></li>
-                <li>Calibre <span class="tag tag-bare-metal">Library</span></li>
-                <li>Local Storage <span class="tag tag-bare-metal">Active</span></li>
+                <li>Project Gutenberg <span class="tag tag-offline">The Library</span></li>
+                <li>iFixit & Stack Exchange <span class="tag tag-offline">Engineering</span></li>
+                <li>Canadian Prepper Guides <span class="tag tag-offline">Survival</span></li>
+                <li>Military Medicine & WikiBooks <span class="tag tag-offline">Resilience</span></li>
             </ul>
         </div>
 
-        <!-- Primary Workstation -->
+        <!-- Daily Operations -->
         <div class="node-card">
-            <h2 class="section-title">Daily Operations</h2>
+            <h2 class="section-title">Primary Workstation</h2>
             <p class="node-desc">
-                My primary environment is optimized for privacy and creative output. All passwords remain in a local, encrypted vault via KeePass, and my "second brain" lives in Obsidian—entirely offline and text-based. Research and technical documentation are handled through LaTeX to maintain professional standards without cloud dependence.
+                Optimized for privacy and high-level research. Encrypted credentials are managed locally via KeePass, and my personal knowledge graph is built in Obsidian. For technical documentation and academic writing, I utilize TexStudio and LaTeX, ensuring professional output without dependence on proprietary cloud software.
             </p>
             <ul class="tech-list">
-                <li>Obsidian <span class="tag tag-local">Local Node</span></li>
-                <li>KeePass <span class="tag tag-local">Secure</span></li>
-                <li>TexStudio / LaTeX <span class="tag tag-local">Active</span></li>
+                <li>Obsidian <span class="tag tag-active">Second Brain</span></li>
+                <li>KeePass <span class="tag tag-secure">Encrypted</span></li>
+                <li>TexStudio / LaTeX <span class="tag tag-active">Documentation</span></li>
+                <li>Calibre <span class="tag tag-offline">E-Book Management</span></li>
             </ul>
         </div>
 
-        <!-- Mobile Interface -->
+        <!-- Mobile Sovereignty -->
         <div class="node-card">
             <h2 class="section-title">Mobile Sovereignty</h2>
             <p class="node-desc">
-                Mobile access is stripped of data-mining streaming services. I manually manage and download my entire audio library, utilizing Musicolet to ensure high-fidelity playback without tracking or subscription requirements. This turns the mobile device into a true personal tool rather than a data tap for third parties.
+                My mobile device is transformed from a tracking beacon into a utility tool. I utilize Musicolet for locally-stored high-fidelity audio, rejecting subscription-based streaming. For navigation, I have completely replaced Google Maps with OSM (OpenStreetMap) data, allowing for precise worldwide navigation without an active connection or data harvesting.
             </p>
             <ul class="tech-list">
-                <li>Musicolet <span class="tag tag-local">Offline</span></li>
-                <li>Personal Audio Library <span class="tag tag-local">Anti-SaaS</span></li>
+                <li>OSM / OpenStreetMap <span class="tag tag-offline">Navigation</span></li>
+                <li>Musicolet <span class="tag tag-offline">Anti-SaaS Audio</span></li>
+                <li>Offline Wiki-Access <span class="tag tag-offline">Kiwix Mobile</span></li>
             </ul>
         </div>
 
@@ -243,16 +325,98 @@
         <div class="node-card">
             <h2 class="section-title">Emergency Buffer</h2>
             <p class="node-desc">
-                A 64GB hardware fallback module carried at all times. It contains a cold-storage snapshot of my most vital documents and credentials. This "dead man's switch" ensures that if physical hardware is lost or compromised, my identity and critical data remain under my physical control.
+                A 64GB hardware fallback module carried at all times. This cold-storage unit contains a snapshot of my most vital documents, identity proofs, and recovery keys. This "dead man's switch" ensures that if physical hardware is lost or network infrastructure collapses, my critical information remains physically on my person.
             </p>
             <ul class="tech-list">
                 <li>64GB Physical Flash Module</li>
-                <li>Critical Redundancy <span class="tag tag-emergency">Fail-Safe</span></li>
+                <li>Cold-Storage Snapshot <span class="tag tag-secure">Encrypted</span></li>
+                <li>Identity Redundancy <span class="tag tag-secure">Fail-Safe</span></li>
             </ul>
         </div>
+    </div>
 
-        <div class="future-note">
-            [ SYSTEM_UPDATE_PENDING ]: Planning migration to Dockerized architecture. This will allow for containerized service management, automated snapshots, and unified synchronization across all nodes in the mesh.
+    <div class="future-note">
+        [ SYSTEM_UPDATE_PENDING ]: Planning migration to Dockerized architecture. This will allow for containerized service management, automated snapshots, and unified synchronization across all nodes in the mesh.
+    </div>
+
+    <div class="manifest-section">
+        <h2 class="section-title">ARCHIVE_MANIFEST // BLUEPRINTS FOR RECONSTRUCTION</h2>
+        <p class="node-desc">This manifest index is provided for those who wish to replicate this Digital Alexandria. These sources represent the core foundations of human knowledge, engineering, and survival resilience, compressed for offline autonomy.</p>
+        
+        <div class="manifest-grid">
+            <!-- General Knowledge -->
+            <div class="manifest-category">
+                <img src="../../icons/placeholder.svg" class="manifest-thumbnail" alt="General Knowledge">
+                <div class="manifest-content">
+                    <h3>General Knowledge</h3>
+                    <ul class="manifest-list">
+                        <li>Wikipedia (Maxi / 2025)</li>
+                        <li>Project Gutenberg (76GB Archive)</li>
+                        <li>WikiBooks & WikiSource</li>
+                        <li>Encyclopædia Britannica</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Technical Engineering -->
+            <div class="manifest-category">
+                <img src="../../icons/placeholder.svg" class="manifest-thumbnail" alt="Technical Engineering">
+                <div class="manifest-content">
+                    <h3>Technical Engineering</h3>
+                    <ul class="manifest-list">
+                        <li>Stack Exchange: Arduino, CS, Electronics</li>
+                        <li>DevDocs: C, C++, Rust, Go, Vue, Python</li>
+                        <li>Arduino & Godot Documentation</li>
+                        <li>OpenStreetMap (OSM) Global Data</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Sovereignty & Repair -->
+            <div class="manifest-category">
+                <img src="../../icons/placeholder.svg" class="manifest-thumbnail" alt="Sovereignty & Repair">
+                <div class="manifest-content">
+                    <h3>Sovereignty & Repair</h3>
+                    <ul class="manifest-list">
+                        <li>iFixit Offline Repair Database</li>
+                        <li>Low-Tech Magazine Archive</li>
+                        <li>Canadian Prepper Survival Manuals</li>
+                        <li>Military Medicine & First Aid (FAS)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- STEM Foundations -->
+            <div class="manifest-category">
+                <img src="../../icons/placeholder.svg" class="manifest-thumbnail" alt="STEM Foundations">
+                <div class="manifest-content">
+                    <h3>STEM Foundations</h3>
+                    <ul class="manifest-list">
+                        <li>LibreTexts: Math, Phys, Stats, Engineering</li>
+                        <li>ProofWiki (Mathematical Proofs)</li>
+                        <li>AI: A Modern Approach (Research Data)</li>
+                        <li>Complex Systems Modeling Archives</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- The Human Element -->
+            <div class="manifest-category">
+                <img src="../../icons/placeholder.svg" class="manifest-thumbnail" alt="The Human Element">
+                <div class="manifest-content">
+                    <h3>The Human Element</h3>
+                    <ul class="manifest-list">
+                        <li>Philosophy: Internet Encyclopedia of Phil.</li>
+                        <li>Language Learning Archives (Spanish/Japanese)</li>
+                        <li>TED Archive: Technology, Ideas, Algorithms</li>
+                        <li>Classic Literature & Historical Epics</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="reconstruction-kit">
+            [ REQUIRED_UTILITIES ]: To deploy this manifest, use Kiwix (.ZIM reader) and Calibre (E-Book Manager). Data integrity verified via local checksums.
         </div>
     </div>
 
