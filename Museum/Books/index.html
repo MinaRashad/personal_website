@@ -1,122 +1,295 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Museum - Books - Mina Eskandar</title>
-    <link rel="stylesheet" href="../../fonts.css">
-    <link rel="stylesheet" href="../../theme.css">
-    <style>
-        body {
-            background: #000;
-            color: var(--text);
-            font-family: Pixel, Courier, monospace;
-            min-height: 100vh;
-            margin: 0;
-            padding: 80px 20px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Museum - Books - Mina Eskandar</title>
 
-        .back-to-museum {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            padding: 10px 15px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.3s ease;
-            box-shadow: 4px 4px 0px rgba(122, 106, 234, 0.2);
-        }
+<link rel="stylesheet" href="../../fonts.css">
+<link rel="stylesheet" href="../../theme.css">
 
-        .back-to-museum:hover {
-            background: var(--accent);
-            color: #000;
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0px rgba(122, 106, 234, 0.4);
-        }
+<style>
+body {
+    background: #000;
+    color: var(--text);
+    font-family: Pixel, Courier, monospace;
+    min-height: 100vh;
+    margin: 0;
+    padding: 80px 20px;
+}
 
-        header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
+/* BACK BUTTON */
+.back-to-museum {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+    box-shadow: 4px 4px 0px rgba(122, 106, 234, 0.2);
+}
 
-        h1 {
-            font-size: 3rem;
-            color: var(--text-hi);
-            text-shadow: 0 0 20px var(--accent);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
+.back-to-museum:hover {
+    background: var(--accent);
+    color: #000;
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px rgba(122, 106, 234, 0.4);
+}
 
-        .content-area {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: rgba(15, 15, 30, 0.8);
-            border: 1px solid var(--border);
-            padding: 40px;
-            min-height: 400px;
-        }
+/* HEADER */
+header {
+    text-align: center;
+    margin-bottom: 60px;
+}
 
-        .placeholder-box {
-            border: 1px dashed var(--text-dim);
-            padding: 40px;
-            text-align: center;
-            color: var(--text-dim);
-        }
+h1 {
+    font-size: 3rem;
+    color: var(--text-hi);
+    text-shadow: 0 0 20px var(--accent);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
 
-        #starfield {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%);
-            z-index: -1;
-        }
+/* CONTENT */
+.content-area {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: rgba(15, 15, 30, 0.8);
+    border: 1px solid var(--border);
+    padding: 40px;
+}
 
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 0;
-        }
-    </style>
+/* GRID */
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 50px;
+    perspective: 600px;
+}
+
+/* ITEM */
+.book-item {
+    position: relative;
+    cursor: pointer;
+    filter: grayscale(0.4);
+    transition: filter 0.3s ease;
+}
+
+.book-item:hover {
+    filter: grayscale(0);
+    z-index: 10;
+}
+
+/* SHADOW (grounds the object) */
+.book-item::before {
+    content: "";
+    position: absolute;
+    bottom: -12px;
+    left: 10%;
+    width: 80%;
+    height: 12px;
+    background: rgba(0,0,0,0.7);
+    filter: blur(8px);
+}
+
+/* 3D BOOK */
+.book {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2/3;
+    transform-style: preserve-3d;
+    transform: rotateY(-18deg);
+    transition: transform 0.5s ease;
+}
+
+.book-item:hover .book {
+    transform: rotateY(-45deg) rotateX(6deg) translateZ(10px);
+}
+
+/* FACES */
+.face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+
+/* FRONT */
+.front {
+    transform: translateZ(12px);
+}
+
+.front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    box-shadow:
+        0 15px 30px rgba(0,0,0,0.7),
+        inset 0 0 20px rgba(0,0,0,0.3);
+}
+
+/* BACK */
+.back {
+    background: #111;
+    transform: rotateY(180deg) translateZ(12px);
+}
+
+/* SPINE */
+.spine {
+    width: 24px;
+    left: 0;
+    transform: rotateY(-90deg) translateZ(12px);
+    transform-origin: left;
+    background: linear-gradient(to right, #222, #000);
+}
+
+/* PAGES */
+.pages {
+    width: 100%;
+    height: 99%;
+    transform: rotateY(90deg) translateZ(calc(100% - 12px));
+    transform-origin: right;
+    background: repeating-linear-gradient(
+        to right,
+        #ffffff,
+        #868585 1px,
+        #ffffff 2px
+    );
+}
+
+/* INFO */
+.book-info {
+    margin-top: 15px;
+    font-size: 0.8rem;
+    color: var(--text-mid);
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.book-item:hover .book-info {
+    opacity: 1;
+}
+
+/* STARFIELD */
+#starfield {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%);
+    z-index: -1;
+}
+
+.star {
+    position: absolute;
+    background: white;
+}
+</style>
 </head>
+
 <body>
-    <div id="starfield"></div>
-    <a href="../index.html" class="back-to-museum">&lt; BACK TO MUSEUM</a>
 
-    <header>
-        <h1>Books</h1>
-    </header>
+<div id="starfield"></div>
+<a href="../index.html" class="back-to-museum">&lt; BACK TO MUSEUM</a>
 
-    <div class="content-area">
-        <div class="placeholder-box">
-            <p>DATA STREAM PENDING...</p>
-            <p style="margin-top: 20px; font-size: 0.8rem;">DUMP IMAGES, LISTS, OR LINKS HERE.</p>
-        </div>
-    </div>
+<header>
+    <h1>Books</h1>
+    <p style="color: var(--text-dim); font-size: 0.9rem;">
+        De-serialized data in paper format. The foundations of my knowledge base.
+    </p>
+    <p>Feel free to recommend in the chat!</p>
+</header>
 
-    <script>
-        function createStars() {
-            const starfield = document.getElementById('starfield');
-            for (let i = 0; i < 200; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                const size = Math.random() * 2 + 0.5;
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.opacity = 0.2 + Math.random() * 0.8;
-                starfield.appendChild(star);
-            }
-        }
-        createStars();
-    </script>
+<div class="content-area">
+    <div id="book-shelf" class="book-grid"></div>
+</div>
+
+<script>
+const isbns = [
+    '9780691164038',
+    '0735211299',
+    '9780374275631',
+    '9780393253788',
+    '9780062457714',
+    '9780451419439',
+    '9783458178767',
+    '9781443455619'
+];
+
+function loadBooks() {
+    const shelf = document.getElementById('book-shelf');
+
+    isbns.forEach(isbn => {
+        const bookItem = document.createElement('div');
+        bookItem.className = 'book-item';
+
+        const coverUrl = `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+
+		bookItem.innerHTML = `
+			<div class="book">
+				<div class="face front">
+					<img class="book-img"
+						 src="../../icons/placeholder.svg"
+						 data-src="${coverUrl}"
+						 alt="ISBN: ${isbn}">
+				</div>
+				<div class="face back"></div>
+				<div class="face spine"></div>
+				<div class="face pages"></div>
+			</div>
+			<div class="book-info">ISBN: ${isbn}</div>
+		`;
+
+        shelf.appendChild(bookItem);
+    });
+}
+
+function loadImages() {
+    const images = document.querySelectorAll('.book-img');
+
+    images.forEach(img => {
+        const realSrc = img.dataset.src;
+
+        const temp = new Image();
+        temp.src = realSrc;
+
+        temp.onload = () => {
+            img.src = realSrc;
+        };
+
+        temp.onerror = () => {
+            img.src = '../../icons/placeholder.svg';
+        };
+    });
+}
+
+function createStars() {
+    const starfield = document.getElementById('starfield');
+    for (let i = 0; i < 200; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random() * 2 + 0.5;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.opacity = 0.2 + Math.random() * 0.8;
+        starfield.appendChild(star);
+    }
+}
+
+createStars();
+loadBooks();
+loadImages()
+</script>
+
 </body>
 </html>
-
