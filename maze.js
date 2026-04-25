@@ -52,7 +52,29 @@ const MAZE = {
       desc: 'Using the latest cutting-edge science of the Quantum divination matrix and Aether Resonance, The Cards of Fate will reveal knowledge about any situation, person or object. Simply focus on your question before drawing and go inside to see the truth.',
       href: 'Projects/CardsOfFate/CoK.html',
       exits: {
-        west: { to: 'projects_node_1', note: 'Go Back' }
+        west: { to: 'projects_node_1', note: 'Go Back' },
+        north: { to: 'cyber_rat_node', note: 'Cyber-Rat Labyrinth' },
+        east: { to: 'folklored_node', note: "folklor'ed" }
+      }
+    },
+    'folklored_node': {
+      type: 'room',
+      name: "folklor'ed",
+      image: "Projects/folklor'ed/folklored.icon.png",
+      desc: "[ DATA_RECOVERY: SUCCESS ] A corrupted combat reflex trainer salvaged from a pre-collapse arcade cabinet. The logic gate is stuck in an infinite loop—difficulty parameters are redlining and the system architecture is destabilizing. Connect your neural interface and see if your organic hardware can keep pace with the overclocked code.",
+      href: "Projects/folklor'ed/index.html",
+      exits: {
+        west: { to: 'Cards of Fate', note: 'Back to Cards' }
+      }
+    },
+    'cyber_rat_node': {
+      type: 'room',
+      name: 'Cyber-Rat Labyrinth',
+      image: 'icons/computer.png',
+      desc: 'A simulated reality where a silicon-based rodent must navigate a procedurally generated maze using experimental search heuristics. Warning: Rodent may become self-aware.',
+      href: 'Projects/Micromous_sim/index.html',
+      exits: {
+        south: { to: 'Cards of Fate', note: 'Back to Cards' }
       }
     },
     'blog_node': {

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>folklor'ed | Fast-Paced Action</title>
+    <link rel="stylesheet" href="../../fonts.css">
+    <style>
+        :root {
+            --primary: #ff3e3e;
+            --bg: #0a0a0a;
+            --text-dim: #8f0000;
+            --accent: #ffd700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--primary);
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .back-to-map {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 5px 10px;
+            text-decoration: none;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-map:hover {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .game-container {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .overlay-info {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            pointer-events: none;
+            text-align: right;
+            font-size: 10px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <a href="../../index.html" class="back-to-map">&lt; RETURN TO MAP</a>
+    
+    <div class="game-container">
+        <iframe src="folklored.html" title="folklor'ed game"></iframe>
+    </div>
+
+    <div class="overlay-info">
+        [ SYSTEM_MODE: COMBAT_SIM ]<br>
+        [ STATUS: ACTIVE ]
+    </div>
+</body>
+</html>

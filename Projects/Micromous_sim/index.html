@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>// CYBER-RAT_LABYRINTH_v0.1</title>
+    <link rel="stylesheet" href="../../fonts.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="scanline"></div>
+    <div class="header-container">
+        <h1>CYBER-RAT_LABYRINTH_v0.1</h1>
+        <h6>[ SYSTEM_MODE: SIMULATION ] Manipulate spatial barriers via pointer interface. Double-tap to initialize TARGET_NODE.</h2>
+    </div>
+    <table id="maze">
+    </table>
+
+    <div id="controls">
+        <div class="control-group">
+            <button id="startBtn" onclick="start()">INITIATE_SIM</button>
+            <button id="resetBtn" onclick="location.reload()">REBOOT_SYSTEM</button>
+        </div>
+        
+        <div class="control-group">
+            <label>CORE_CONFIG:</label>
+            <select id="configSelect">
+                <option value="custom">USER_DEFINED</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>HEURISTIC_ALGO:</label> 
+            <select id="algorithmSelect">
+                <option value="floodfill">FLOOD_FILL (Exploration Mode)</option>
+                <option value="A_star">A_STAR (Optimized Pathing)</option>
+            </select>
+        </div>
+
+        <div id="status-display">
+            <span class="status-label">STATUS:</span>
+            <span id="status">IDLE</span>
+        </div>
+
+        <div class="back-link">
+            <button onclick="window.location.href='../../index.html'" style="width: 100%; margin-bottom: 10px;">RETURN_TO_MAP</button>
+            <a href="../../index.html">[ EXIT_SESSION ]</a>
+        </div>
+    </div>
+    <script src="maze.js"></script>
+    <script src="rat.js"></script>
+    <script src="script.js"></script>
+</body>
+    
+</html>
