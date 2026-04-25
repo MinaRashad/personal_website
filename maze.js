@@ -70,7 +70,7 @@ const MAZE = {
     'cyber_rat_node': {
       type: 'room',
       name: 'Cyber-Rat Labyrinth',
-      image: 'icons/computer.png',
+      image: 'icons/punk_rat.png',
       desc: 'A simulated reality where a silicon-based rodent must navigate a procedurally generated maze using experimental search heuristics. Warning: Rodent may become self-aware.',
       href: 'Projects/Micromous_sim/index.html',
       exits: {
