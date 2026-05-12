@@ -110,25 +110,22 @@ body.is-warping #warp-canvas { opacity: 1; }
 /* --- Node Info (Floating Description) --- */
 #node-info {
   position: absolute;
-  width: 260px;
+  width: 320px;
   pointer-events: none;
   z-index: 20;
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.3s, transform 0.3s;
   text-align: left;
 }
-
-#room-view:hover ~ #node-info,
-#node-info.always-show { opacity: 1; }
 
 .info-name {
   background: var(--text-hi);
   color: #000;
   display: inline-block;
-  padding: 4px 10px;
+  padding: 6px 12px;
   font-weight: bold;
   text-transform: uppercase;
-  font-size: 13px;
+  font-size: 16px;
   letter-spacing: 1px;
   margin-bottom: 4px;
 }
@@ -136,9 +133,9 @@ body.is-warping #warp-canvas { opacity: 1; }
 .info-desc {
   background: rgba(15, 15, 30, 0.9);
   color: var(--text-mid);
-  padding: 10px;
-  font-size: 11px;
-  line-height: 1.5;
+  padding: 12px;
+  font-size: 13px;
+  line-height: 1.6;
   border: 1px solid var(--border);
 }
 
