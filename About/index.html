@@ -654,13 +654,22 @@
                 funFact: null
             },
             {
-                year: "Winter 2025",
-                title: "Buenos Aires: Current Location",
-                description: "Third year begins in Buenos Aires, Argentina - the colorful city of tango where the architecture is stunning and the empanadas are dangerously addictive. Currently eating a concerning amount of empanadas. The adventure continues. The story is still being written.",
-                avatar: "",
+                year: "Sep 2025 - Apr 2026",
+                title: "Buenos Aires: Tango & Empanadas",
+                description: "Third year in Buenos Aires, Argentina - the colorful city of tango where the architecture is stunning and the empanadas are dangerously addictive. Ate a concerning amount of empanadas and enjoyed the rhythm of the city.",
+                avatar: "🥟",
                 media: "buenos.jpg",
-                tags: ["Buenos Aires", "Current", "Empanadas"],
+                tags: ["Buenos Aires", "Argentina", "Empanadas"],
                 funFact: "🥟 Fun Fact: My entire spanish now consists of ordering empanadas, asking for flavours, and saying 'Card' when I pay"
+            },
+            {
+                year: "Fall 2026 - Present",
+                title: "Berlin: Current Location",
+                description: "Senior year begins in Berlin, Germany. Kicking off the final chapter of the Minerva journey in a city known for its history, vibrant culture, and endless energy. The adventure continues. The story is still being written.",
+                avatar: "🐻",
+                media: "berlin.jpg",
+                tags: ["Berlin", "Current", "Senior Year"],
+                funFact: null
             }
         ];
 
@@ -764,9 +773,14 @@
             
             artifacts.forEach((key, index) => {
                 const data = artifactsData[key];
-                const div = document.createElement('div');
+                const div = document.createElement(data.direct ? 'a' : 'div');
                 div.className = 'floating-artifact';
-                div.innerHTML = data.image ? `<img src="${data.image}" alt="${key}">` : data.emoji;
+                div.innerHTML = data.image ? `<img src="${data.image}" alt="${data.label || key}">${data.label ? `<span style="position:absolute; top:70px; white-space:nowrap; color:#ffd700; font-size:.7rem; letter-spacing:1px; text-shadow:2px 2px #000;">${data.label}</span>` : ''}` : data.emoji;
+                if (data.direct) {
+                    div.href = data.link;
+                    div.setAttribute('aria-label', data.label);
+                    div.style.textDecoration = 'none';
+                }
                 
                 // Set random starting position
                 if (positions[index].top) div.style.top = positions[index].top;
@@ -776,7 +790,7 @@
                 
                 div.style.animation = positions[index].animation;
                 
-                div.addEventListener('click', () => openArtifactModal(key));
+                if (!data.direct) div.addEventListener('click', () => openArtifactModal(key));
                 container.appendChild(div);
             });
         }
