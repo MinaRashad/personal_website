@@ -4,15 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Life in Motion - Portfolio</title>
+    <meta name="description" content="My life as a flight through space: one planet per chapter, from Alexandria to Berlin.">
     <link rel="stylesheet" href="../fonts.css">
+
+    <!-- three.js is vendored in ./vendor so the page never depends on a CDN -->
+    <script type="importmap">
+    { "imports": { "three": "./vendor/three.module.min.js" } }
+    </script>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --accent: #ffd700;
+            --bg: #02020a;
+            --gold: #ffd700;
         }
 
-        /* Back Button Style */
+        html { -webkit-text-size-adjust: 100%; }
+
+        body {
+            background: var(--bg);
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ---------- 3D canvas + fallback backdrop ---------- */
+        #gl {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            display: block;
+        }
+
+        /* Shown only when WebGL is unavailable: a still starfield */
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            display: none;
+            background:
+                radial-gradient(1px 1px at 12% 18%, #fff 50%, transparent 51%),
+                radial-gradient(1px 1px at 78% 12%, #fff 50%, transparent 51%),
+                radial-gradient(2px 2px at 44% 36%, #cfd6ff 50%, transparent 51%),
+                radial-gradient(1px 1px at 90% 58%, #fff 50%, transparent 51%),
+                radial-gradient(1px 1px at 26% 72%, #fff 50%, transparent 51%),
+                radial-gradient(2px 2px at 63% 84%, #cfd6ff 50%, transparent 51%),
+                radial-gradient(1px 1px at 8% 92%, #fff 50%, transparent 51%),
+                radial-gradient(circle at 50% 30%, #0c0c22 0%, #02020a 70%);
+        }
+        body.no-3d .backdrop { display: block; }
+        body.no-3d #gl { display: none; }
+
+        .vignette {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse at center, transparent 58%, rgba(0, 0, 0, 0.55) 100%),
+                repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 3px);
+        }
+        body.no-3d .vignette { display: none; }
+
+        /* ---------- Back button (unchanged look) ---------- */
         .back-to-map {
             position: fixed;
             top: 20px;
@@ -31,74 +89,55 @@
             transition: all 0.3s ease;
             box-shadow: 4px 4px 0px rgba(255, 215, 0, 0.2);
         }
-
-        .back-to-map:hover {
+        .back-to-map:hover, .back-to-map:focus-visible {
             background: #ffd700;
             color: #000;
             transform: translate(-2px, -2px);
             box-shadow: 6px 6px 0px rgba(255, 215, 0, 0.4);
+            outline: none;
         }
 
-        body {
-            background: #000;
-            color: #fff;
-            overflow-x: hidden;
+        /* ---------- Story layout ---------- */
+        #story {
             position: relative;
+            z-index: 3;
+            pointer-events: none;   /* clicks fall through to the 3D scene */
         }
 
-        .stars {
-            position: fixed;
+        .pin {
+            position: sticky;
             top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 0;
-            animation: twinkle 3s infinite;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-
-        .hero {
             height: 100vh;
+            height: 100svh;
             display: flex;
+            align-items: center;
+            padding: 0 6vw;
+        }
+
+        /* ---------- Hero ---------- */
+        .hero { height: 100vh; height: 100svh; position: relative; }
+        .hero .pin {
+            position: absolute;
+            inset: 0;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
             text-align: center;
-            position: relative;
         }
 
         .hero h1 {
-            font-size: 5rem;
+            font-size: clamp(2.6rem, 9vw, 5rem);
             margin-bottom: 1rem;
             opacity: 0;
             animation: fadeInUp 1s forwards 0.3s, titleFloat 3s ease-in-out infinite alternate;
             text-transform: uppercase;
             letter-spacing: 8px;
             color: #fff;
-            position: relative;
             font-family: arcade, cursive;
         }
 
         @keyframes titleFloat {
-            0% { 
-                transform: translateY(0); 
-                text-shadow: 4px 4px 0px #667eea, 0 0 20px rgba(102, 126, 234, 0.5); 
-            }
-            100% { 
-                transform: translateY(-15px); 
-                text-shadow: 4px 19px 0px rgba(102, 126, 234, 0.2), 0 0 40px rgba(255, 215, 0, 0.4); 
-            }
+            0%   { transform: translateY(0);     text-shadow: 4px 4px 0px #667eea, 0 0 20px rgba(102, 126, 234, 0.5); }
+            100% { transform: translateY(-15px); text-shadow: 4px 19px 0px rgba(102, 126, 234, 0.2), 0 0 40px rgba(255, 215, 0, 0.4); }
         }
 
         .hero p {
@@ -113,179 +152,100 @@
         .scroll-indicator {
             position: absolute;
             bottom: 3rem;
+            left: 0; right: 0;
+            margin: 0 auto;
+            width: max-content;
             font-size: 1rem;
             opacity: 0;
-            animation: fadeInBounce 1s forwards 1s, blink 1.5s infinite;
-            color: rgba(255, 255, 255, 0.6);
+            animation: fadeInBounce 1s forwards 1s, blink 1.5s infinite 2s;
+            color: rgba(255, 255, 255, 0.7);
             cursor: pointer;
+            pointer-events: auto;
+            background: none;
+            border: 0;
+            font-family: inherit;
         }
+        .scroll-indicator::before { content: "[ "; }
+        .scroll-indicator::after  { content: " ]"; }
+        .scroll-indicator:focus-visible { outline: 1px solid #ffd700; outline-offset: 6px; }
 
-        .scroll-indicator::before {
-            content: "[ ";
-        }
-        .scroll-indicator::after {
-            content: " ]";
-        }
+        body.scrolled .hero h1,
+        body.scrolled .hero p,
+        body.scrolled .scroll-indicator { transition: opacity 0.6s; opacity: 0; animation: none; }
 
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.2; }
-        }
-
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
         @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-
-        @keyframes fadeInBounce {
-            to {
-                opacity: 1;
-            }
-            from {
-                opacity: 0;
-            }
-        }
-
+        @keyframes fadeInBounce { from { opacity: 0; } to { opacity: 1; } }
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-10px);
-            }
-            60% {
-                transform: translateY(-5px);
-            }
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
         }
 
-        .timeline-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-            position: relative;
-        }
+        /* ---------- Chapters ---------- */
+        .chapter { height: 120vh; position: relative; }
+        .chapter[data-card="left"]  .pin { justify-content: flex-start; --dx: -1; }
+        .chapter[data-card="right"] .pin { justify-content: flex-end;   --dx: 1;  }
 
-        .timeline-line {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            background: rgba(255, 255, 255, 0.5);
-            top: 0;
-            bottom: 0;
+        .card {
+            --vis: 0;
+            width: min(460px, 42vw);
+            max-height: 88vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) transparent;
+            pointer-events: auto;
+            background: rgba(6, 6, 20, 0.72);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            padding: 1.8rem;
+            border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+            box-shadow: 8px 8px 0px color-mix(in srgb, var(--accent) 22%, transparent);
+            opacity: var(--vis);
+            transform: translateX(calc((1 - var(--vis)) * var(--dx, 0) * 70px));
+            will-change: opacity, transform;
         }
+        .card.off { pointer-events: none; }
+        body.no-3d .card.off { pointer-events: auto; }
 
-        .timeline-event {
-            display: flex;
-            margin-bottom: 4rem;
-            position: relative;
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.6s ease;
-        }
-
-        .timeline-event.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .timeline-event:nth-child(even) {
-            flex-direction: row-reverse;
-        }
-
-        .event-content {
-            width: 45%;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(5px);
-            padding: 2rem;
-            border-radius: 0;
-            box-shadow: 8px 8px 0px rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }
-
-        .event-content:hover {
-            transform: translate(-4px, -4px);
-            box-shadow: 12px 12px 0px rgba(255, 255, 255, 0.2);
-        }
-
-        .event-dot {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 16px;
-            height: 16px;
-            background: #fff;
-            border-radius: 0;
-            border: 2px solid #667eea;
-            z-index: 10;
-            transition: all 0.3s ease;
-        }
-
-        .timeline-event:hover .event-dot {
-            transform: translateX(-50%) scale(1.5) rotate(45deg);
-            background: #ffd700;
-        }
-
-        .event-year {
+        .card-year {
             font-size: 2rem;
             font-weight: bold;
-            color: #ffd700;
-            margin-bottom: 0.5rem;
+            color: var(--accent);
+            margin-bottom: 0.4rem;
+            text-shadow: 0 0 18px color-mix(in srgb, var(--accent) 55%, transparent);
         }
-
-        .event-title {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+        .card-title {
+            font-size: 1.35rem;
+            margin-bottom: 0.9rem;
             font-weight: 600;
             text-transform: uppercase;
+            line-height: 1.25;
         }
-
-        .event-description {
+        .card-desc {
             font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 1rem;
+            line-height: 1.65;
             color: rgba(255, 255, 255, 0.9);
         }
 
-        .event-media {
+        /* Photo shown here only when 3D is off or a texture couldn't load */
+        .flat {
+            display: none;
             width: 100%;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            margin-top: 1rem;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .event-media img {
-            width: 100%;
-            height: 100%;
+            max-height: 260px;
             object-fit: cover;
-        }
-
-        .event-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
             margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.25);
         }
+        body.no-3d .flat, .card.show-flat .flat { display: block; }
 
+        .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
         .tag {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             padding: 0.3rem 0.8rem;
-            border-radius: 0;
             font-size: 0.75rem;
             border: 1px solid rgba(255, 255, 255, 0.3);
             text-transform: uppercase;
@@ -293,182 +253,32 @@
 
         .fun-fact {
             margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(255, 215, 0, 0.05);
-            border-radius: 0;
-            font-size: 1.5rem;
-            border-left: 4px solid #ffd700;
+            padding: 0.9rem 1rem;
+            background: color-mix(in srgb, var(--accent) 8%, transparent);
+            font-size: 1.3rem;
+            border-left: 4px solid var(--accent);
+            line-height: 1.35;
         }
+        .fun-fact strong { color: var(--accent); }
 
-        .fun-fact strong {
-            color: #ffd700;
-        }
-
-        .floating-artifact {
-            position: absolute;
-            cursor: pointer;
-            transition: transform 0.3s ease, filter 0.3s ease;
-            z-index: 0;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .floating-artifact img {
-            width: 64px;
-            height: 64px;
-            image-rendering: pixelated;
-            image-rendering: -moz-crisp-edges;
-            image-rendering: crisp-edges;
-        }
-
-        .floating-artifact:hover {
-            transform: scale(1.1);
-            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
-        }
-
-        @keyframes drift1 {
-            0% { transform: translate(0vw, 0vh) rotate(0deg); }
-            25% { transform: translate(15vw, -10vh) rotate(15deg); }
-            50% { transform: translate(-10vw, -20vh) rotate(-10deg); }
-            75% { transform: translate(20vw, -15vh) rotate(20deg); }
-            100% { transform: translate(0vw, 0vh) rotate(0deg); }
-        }
-
-        @keyframes drift2 {
-            0% { transform: translate(0vw, 0vh) rotate(0deg); }
-            25% { transform: translate(-20vw, 15vh) rotate(-20deg); }
-            50% { transform: translate(10vw, 25vh) rotate(15deg); }
-            75% { transform: translate(-15vw, 10vh) rotate(-15deg); }
-            100% { transform: translate(0vw, 0vh) rotate(0deg); }
-        }
-
-        @keyframes drift3 {
-            0% { transform: translate(0vw, 0vh) rotate(0deg); }
-            25% { transform: translate(10vw, 20vh) rotate(10deg); }
-            50% { transform: translate(-15vw, 15vh) rotate(-20deg); }
-            75% { transform: translate(12vw, -10vh) rotate(25deg); }
-            100% { transform: translate(0vw, 0vh) rotate(0deg); }
-        }
-
-        @keyframes drift4 {
-            0% { transform: translate(0vw, 0vh) rotate(0deg); }
-            25% { transform: translate(-12vw, -15vh) rotate(-15deg); }
-            50% { transform: translate(18vw, -10vh) rotate(20deg); }
-            75% { transform: translate(-10vw, 12vh) rotate(-25deg); }
-            100% { transform: translate(0vw, 0vh) rotate(0deg); }
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(2px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-content {
-            background: #0a0a1a;
-            border: 2px solid #ffd700;
-            border-radius: 0;
-            padding: 2rem;
-            max-width: 500px;
+        /* ---------- Outro / contact ---------- */
+        .outro { height: 100vh; height: 100svh; position: relative; }
+        .outro .pin { justify-content: center; }
+        .outro .card {
+            --dx: 0;
+            width: min(620px, 92vw);
             text-align: center;
-            animation: scaleIn 0.3s ease;
-            box-shadow: 10px 10px 0px rgba(255, 215, 0, 0.2);
+            --accent: #ffd700;
         }
-
-        @keyframes scaleIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .modal-emoji {
-            font-size: 5rem;
-            margin-bottom: 1rem;
-            animation: bounce 1s ease infinite;
-        }
-
-        .modal-message {
-            color: #fff;
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .modal-button {
-            padding: 0.8rem 2rem;
-            border: 1px solid #fff;
-            border-radius: 0;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 600;
-            font-family: inherit;
-            text-transform: uppercase;
-        }
-
-        .modal-button.yes {
-            background: #ffd700;
-            color: #000;
-            border-color: #ffd700;
-        }
-
-        .modal-button.yes:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 4px 4px 0px rgba(255, 215, 0, 0.4);
-        }
-
-        .modal-button.no {
-            background: transparent;
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .modal-button.no:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translate(-2px, -2px);
-            box-shadow: 4px 4px 0px rgba(255, 255, 255, 0.2);
-        }
-
-        .footer {
-            text-align: center;
-            padding: 3rem 2rem;
-            background: rgba(0, 0, 0, 0.5);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .footer h2 {
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-        }
+        .outro h2 { margin-bottom: 0.8rem; text-transform: uppercase; font-size: 1.6rem; }
 
         .contact-links {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
-            gap: 2rem;
-            margin-top: 1.5rem;
+            gap: 0.8rem 2rem;
+            margin-top: 1.4rem;
         }
-
         .contact-links a {
             color: #ffd700;
             text-decoration: none;
@@ -477,75 +287,289 @@
             display: inline-block;
             border-bottom: 1px solid transparent;
         }
-
-        .contact-links a:hover {
+        .contact-links a:hover, .contact-links a:focus-visible {
             transform: scale(1.1);
             border-bottom-color: #ffd700;
+            outline: none;
         }
 
-        @media (max-width: 768px) {
-            .timeline-line {
-                left: 30px;
-            }
+        .relics { margin-top: 1.8rem; padding-top: 1.2rem; border-top: 1px dashed rgba(255, 215, 0, 0.35); }
+        .relics-title { font-size: 0.72rem; letter-spacing: 3px; color: rgba(255, 255, 255, 0.55); text-transform: uppercase; margin-bottom: 0.9rem; }
+        .relic-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.7rem; }
+        .relic-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            background: rgba(255, 215, 0, 0.06);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.8rem;
+            padding: 0.45rem 0.8rem 0.45rem 0.5rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+        }
+        .relic-btn img { width: 26px; height: 26px; image-rendering: pixelated; }
+        .relic-btn:hover, .relic-btn:focus-visible {
+            background: rgba(255, 215, 0, 0.18);
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0 rgba(255, 215, 0, 0.3);
+            outline: none;
+        }
 
-            .timeline-event {
-                flex-direction: column !important;
-                padding-left: 60px;
-            }
+        /* ---------- HUD: progress rail + hint ---------- */
+        .rail {
+            position: fixed;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        .rail button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: none;
+            border: 0;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.55);
+            font-family: inherit;
+            font-size: 11px;
+            letter-spacing: 1px;
+            padding: 3px 0;
+        }
+        .rail .rail-year { opacity: 0; transform: translateX(6px); transition: opacity 0.2s, transform 0.2s; white-space: nowrap; }
+        .rail .rail-dot {
+            width: 10px; height: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            background: rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s, background 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+        .rail button:hover .rail-year, .rail button:focus-visible .rail-year { opacity: 1; transform: none; }
+        .rail .rail-year { background: rgba(0, 0, 0, 0.75); padding: 2px 6px; }
+        .rail button.active { color: var(--accent); }
+        .rail button.active .rail-dot {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: rotate(45deg) scale(1.2);
+            box-shadow: 0 0 12px var(--accent);
+        }
+        .rail button:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
 
-            .event-content {
+        .hint {
+            position: fixed;
+            right: 18px;
+            bottom: 16px;
+            z-index: 50;
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.45);
+            text-align: right;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        .hint .touch-only { display: none; }
+        @media (pointer: coarse) {
+            .hint .kb-only { display: none; }
+            .hint .touch-only { display: inline; }
+        }
+        body.no-3d .hint { display: none; }
+
+        /* Hover label for floating relics */
+        #tip {
+            position: fixed;
+            z-index: 60;
+            pointer-events: none;
+            padding: 5px 9px;
+            background: #ffd700;
+            color: #000;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 0 18px rgba(255, 215, 0, 0.5);
+            transform: translate(14px, -34px);
+            opacity: 0;
+            transition: opacity 0.15s;
+            white-space: nowrap;
+        }
+        #tip.show { opacity: 1; }
+
+        /* ---------- Modal (unchanged look) ---------- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(2px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+            padding: 16px;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-content {
+            background: #0a0a1a;
+            border: 2px solid #ffd700;
+            padding: 2rem;
+            max-width: 500px;
+            text-align: center;
+            animation: scaleIn 0.3s ease;
+            box-shadow: 10px 10px 0px rgba(255, 215, 0, 0.2);
+        }
+        @keyframes scaleIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .modal-message { color: #fff; font-size: 1.1rem; margin-bottom: 2rem; line-height: 1.6; }
+        .modal-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+        .modal-button {
+            padding: 0.8rem 2rem;
+            border: 1px solid #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            font-family: inherit;
+            text-transform: uppercase;
+        }
+        .modal-button.yes { background: #ffd700; color: #000; border-color: #ffd700; }
+        .modal-button.yes:hover, .modal-button.yes:focus-visible { transform: translate(-2px, -2px); box-shadow: 4px 4px 0px rgba(255, 215, 0, 0.4); outline: none; }
+        .modal-button.no { background: transparent; color: #fff; border: 1px solid rgba(255, 255, 255, 0.5); }
+        .modal-button.no:hover, .modal-button.no:focus-visible { background: rgba(255, 255, 255, 0.1); transform: translate(-2px, -2px); box-shadow: 4px 4px 0px rgba(255, 255, 255, 0.2); outline: none; }
+
+        /* ---------- Toast (replaces the old alert()) ---------- */
+        #toast {
+            position: fixed;
+            left: 50%;
+            top: 70px;
+            transform: translate(-50%, -20px);
+            z-index: 3000;
+            padding: 12px 18px;
+            background: #ffd700;
+            color: #000;
+            font-size: 14px;
+            letter-spacing: 1px;
+            box-shadow: 0 0 28px rgba(255, 215, 0, 0.6);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s, transform 0.3s;
+            max-width: calc(100vw - 32px);
+            text-align: center;
+        }
+        #toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+        .sr-only {
+            position: absolute; width: 1px; height: 1px; overflow: hidden;
+            clip: rect(0 0 0 0); white-space: nowrap;
+        }
+
+        /* ---------- Phones & portrait: card at the bottom, scene above ---------- */
+        @media (max-width: 760px), (max-aspect-ratio: 19/20) {
+            .pin { padding: 0 14px 16px; align-items: flex-end; justify-content: center !important; }
+            .card {
                 width: 100%;
+                max-height: 54vh;
+                padding: 1.1rem;
+                transform: translateY(calc((1 - var(--vis)) * 40px));
             }
+            .card-year { font-size: 1.5rem; }
+            .card-title { font-size: 1.05rem; margin-bottom: 0.6rem; }
+            .card-desc { font-size: 0.8rem; line-height: 1.55; }
+            .tag { font-size: 0.65rem; padding: 0.2rem 0.55rem; }
+            .fun-fact { font-size: 1.05rem; padding: 0.7rem 0.8rem; }
+            .outro .pin { align-items: center; }
+            .outro .card { padding: 1.3rem; }
+            .rail { right: 6px; gap: 7px; }
+            .rail .rail-year { display: none; }
+            .rail .rail-dot { width: 8px; height: 8px; }
+            .hint { display: none; }
+            .back-to-map { top: 12px; left: 12px; font-size: 12px; padding: 8px 11px; }
+        }
 
-            .event-dot {
-                left: 30px;
-            }
+        /* ---------- No WebGL: a plain, readable timeline ---------- */
+        body.no-3d .chapter { height: auto; padding: 1.5rem 0; }
+        body.no-3d .chapter .pin { position: static; height: auto; padding: 0 6vw; }
+        body.no-3d .card { --vis: 1 !important; opacity: 1; transform: none; max-height: none; overflow: visible; }
+        body.no-3d .outro { height: auto; padding: 3rem 0 4rem; }
+        body.no-3d .outro .pin { position: static; height: auto; }
+        body.no-3d .hero { height: 70vh; }
+        body.no-3d .rail { display: none; }
+        body.no-3d #story { pointer-events: auto; }
+        @media (max-width: 760px), (max-aspect-ratio: 19/20) {
+            body.no-3d .chapter .pin { padding: 0 14px; }
+        }
 
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero p {
-                font-size: 1.2rem;
-            }
-
-            .floating-artifact {
-                font-size: 1rem;
-            }
+        @media (prefers-reduced-motion: reduce) {
+            .hero h1 { animation: fadeInUp 0.01s forwards; }
+            .scroll-indicator { animation: fadeInBounce 0.01s forwards; }
+            .card { transition: none; transform: none !important; }
         }
     </style>
 </head>
 <body>
     <a href="../index.html" class="back-to-map">&lt; RETURN TO MAP</a>
-    <div class="stars" id="stars"></div>
-    
-    <div class="hero">
-        <h1>My life</h1>
-        <p>-By Mina Eskandar (me)</p>
-        <div class="scroll-indicator">SCROLL TO START</div>
-    </div>
 
-    <div class="timeline-container">
-        <div class="timeline-line"></div>
-        <div id="timeline-events"></div>
-    </div>
+    <div class="backdrop" aria-hidden="true"></div>
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
 
-    <div class="artifacts" id="artifacts-container">
-        <!-- Floating artifacts will be rendered here -->
-    </div>
+    <nav class="rail" id="rail" aria-label="Timeline"></nav>
 
-    <div class="footer">
-        <h2>Let's Connect</h2>
-        <p>Want to collaborate or just say hi?</p>
-        <div class="contact-links">
-            <a href="https://github.com/MinaRashad/">GitHub</a>
-            <a href="https://www.linkedin.com/in/mina-eskandar-35418a171/">LinkedIn</a>
-            <a href="mailto:protofolio@minaeskandar.com">Email</a>
-            <a href="https://t.me/Minatherobot">Telegram</a>
-            <a href="https://ngl.link/minaesk">NGL</a>
-        </div>
+    <div class="hint" aria-hidden="true">
+        <span class="kb-only">SCROLL to fly &middot; CLICK the floating relics</span>
+        <span class="touch-only">SWIPE to fly &middot; TAP the floating relics</span>
     </div>
+    <div id="tip" aria-hidden="true"></div>
+    <div id="toast" role="status"></div>
 
+    <main id="story">
+        <section class="hero" id="hero">
+            <div class="pin">
+                <h1>My life</h1>
+                <p>-By Mina Eskandar (me)</p>
+                <button class="scroll-indicator" id="start" type="button">SCROLL TO START</button>
+            </div>
+        </section>
+
+        <div id="chapters"><!-- chapters are rendered from timelineData below --></div>
+
+        <section class="outro" id="outro">
+            <div class="pin">
+                <div class="card">
+                    <h2>Let's Connect</h2>
+                    <p>Want to collaborate or just say hi?</p>
+                    <div class="contact-links">
+                        <a href="https://github.com/MinaRashad/">GitHub</a>
+                        <a href="https://www.linkedin.com/in/mina-eskandar-35418a171/">LinkedIn</a>
+                        <a href="mailto:protofolio@minaeskandar.com">Email</a>
+                        <a href="https://t.me/Minatherobot">Telegram</a>
+                        <a href="https://ngl.link/minaesk">NGL</a>
+                    </div>
+                    <div class="relics">
+                        <div class="relics-title">Relics found along the way</div>
+                        <div class="relic-row" id="relic-row"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <noscript>
+        <p style="position:relative;z-index:5;padding:90px 24px 24px;text-align:center;color:#ccc;">
+            This page tells my life story as a flight through space and needs JavaScript.
+            You can still reach me at <a href="mailto:protofolio@minaeskandar.com" style="color:#ffd700;">protofolio@minaeskandar.com</a>.
+        </p>
+    </noscript>
+
+    <!-- ===== Content + page behaviour (works with or without WebGL) ===== -->
     <script>
         // Artifacts data
         const artifactsData = {
@@ -579,12 +603,13 @@
             }
         };
 
-        // Timeline data
+        // Timeline data (each chapter has an `accent` colour used by the 3D scene and the cards)
         const timelineData = [
             {
                 year: "2003",
                 title: "Player Joined the Server",
                 description: "Spawned in Alexandria, Egypt - the Mediterranean city where history meets the sea. Born to a Coptic family with roots spanning the entire country: my father from Upper Egypt, my mother from Lower Egypt. Coincidentally, I share my name with King Mina, the legendary pharaoh who united Upper and Lower Egypt.",
+                accent: "#ffb454",
                 avatar: "🌍",
                 media: "./Corniche_of_Alexandria.jpg",
                 tags: ["Alexandria", "Egypt", "New Beginnings"],
@@ -594,6 +619,7 @@
                 year: "2018",
                 title: "Level Up: STEM Alexandria",
                 description: "Finished pre-high school as top of my class (a streak I'd maintained for basically my entire academic life). Then came the challenge: IQ and math tests for Egypt's experimental STEM schools - institutions that accept only ~2,000 students from hundreds of thousands of applicants. Got in. STEM Alexandria became the catalyst that transformed everything. Finally had the space to explore my passions beyond textbooks and discover what genuinely excited me.",
+                accent: "#4dd0ff",
                 avatar: "🎓",
                 media: "https://static.wixstatic.com/media/80b2c1_62741b96fa2e4e77baeee4dfa55074c5~mv2.jpg/v1/fill/w_1280,h_769,fp_0.50_0.50,q_85,enc_avif,quality_auto/80b2c1_62741b96fa2e4e77baeee4dfa55074c5~mv2.jpg",
                 tags: ["STEM", "Top Student", "Self-Discovery"],
@@ -603,6 +629,7 @@
                 year: "2021",
                 title: "Egyptian-Japanese University Era",
                 description: "Graduated high school in the top 10 nationwide, earning a full scholarship to study Engineering at Egyptian-Japanese University. Met incredible friends, dove into Japanese culture, and discovered the university's quirky Japanese restaurant. But something felt off. This path was prestigious, comfortable... and not mine. I wanted something else - something beyond what everyone expected.",
+                accent: "#ff5d7a",
                 avatar: "🎌",
                 media: "https://i.imgur.com/n3R4a2M.jpeg",
                 tags: ["Engineering", "Scholarship", "Cultural Fusion"],
@@ -612,6 +639,7 @@
                 year: "2022",
                 title: "The Minerva Dream (& Survival Jobs)",
                 description: "Applied to Minerva University - a school where you study and work in a different country every semester. My dream university, but with acceptance rates lower than my expectations. So I did what any determined person would do: spammed their mailbox with hackathon wins and project showcases. It worked. Got accepted. Then reality hit: tuition. Spent the gap year grinding through deli work, Amazon warehouse shifts, McDonald's, produce associate, cashier jobs. Not glamorous, not well-paid, but gave me life experience money can't buy.",
+                accent: "#5ee6a8",
                 avatar: "💼",
                 media: "https://i.imgur.com/OiiVV6R.jpeg",
                 tags: ["Minerva", "Hustle", "Dream Chasing"],
@@ -621,6 +649,7 @@
                 year: "2023-2024",
                 title: "San Francisco: City by the Bay",
                 description: "First year at Minerva in San Francisco. Met 200 fascinating humans from every corner of the world. Got a work-study managing dorm packages (yes, I became the package guy). Civic project: built an AI data journaling app for a mental health clinic. Lived in a tourist hotspot, so every morning felt like I was walking through someone else's vacation photos. The city taught me that the world is bigger and weirder than I ever imagined.",
+                accent: "#ff8a3d",
                 avatar: "🌉",
                 media: "golden_gate.jpg",
                 tags: ["Minerva", "AI Project", "Cultural Mosaic"],
@@ -630,6 +659,7 @@
                 year: "Summer 2024",
                 title: "Cats, Code & Freelancing",
                 description: "Attended a hackathon. Met the founder of The Dancing Cat (TDC) shelter who mentioned their data management was painfully slow. Offered to help. Also landed a freelance gig with Data Annotation - flexible hours, good pay, worked on personal projects. But the technical growth plateaued. So I pivoted: learned Vue.js, Express.js, DevOps, and Nginx while rebuilding TDC's entire system. They loved it. Still check in regularly to make sure everything's purring along smoothly.",
+                accent: "#d46bff",
                 avatar: "🐱",
                 media: "cat.gif",
                 tags: ["Vue.js", "Express.js", "DevOps", "Freelancing"],
@@ -639,6 +669,7 @@
                 year: "Winter 2024",
                 title: "Taipei: First Steps in Asia",
                 description: "Second year at Minerva kicked off in Taipei, Taiwan. A city that hits different - incredible people, food that ruined all future food standards, and nature that looks photoshopped but isn't. Work-study upgraded to research assistant. Civic project: built an AI presentation generator for BearVFX. Won the civic project fair by majority vote. ",
+                accent: "#ff7eb6",
                 avatar: "🏮",
                 media: "panda.jpg",
                 tags: ["Taiwan", "AI Research", "Award Winner"],
@@ -648,6 +679,7 @@
                 year: "Spring 2025",
                 title: "Seoul: K-Drama Food Quest",
                 description: "Landed in Seoul with a mission: try every food that appears in K-dramas. Not because I'm a K-culture superfan, but because my closest friends are, and food is how I experience culture. Plus, everything looked delicious. Work-study continued as research assistant. Civic project: built an AI that generates N8N workflows for GSP. The company hit a technical roadblock we managed to break through. Delivered the app. Seoul delivered the flavors.",
+                accent: "#8f7dff",
                 avatar: "🍜",
                 media: "bibibibibi.jpg",
                 tags: ["Seoul", "AI Workflows", "Cultural Immersion"],
@@ -657,6 +689,7 @@
                 year: "Sep 2025 - Apr 2026",
                 title: "Buenos Aires: Tango & Empanadas",
                 description: "Third year in Buenos Aires, Argentina - the colorful city of tango where the architecture is stunning and the empanadas are dangerously addictive. Ate a concerning amount of empanadas and enjoyed the rhythm of the city.",
+                accent: "#46e0c8",
                 avatar: "🥟",
                 media: "buenos.jpg",
                 tags: ["Buenos Aires", "Argentina", "Empanadas"],
@@ -666,6 +699,7 @@
                 year: "Fall 2026 - Present",
                 title: "Berlin: Current Location",
                 description: "Senior year begins in Berlin, Germany. Kicking off the final chapter of the Minerva journey in a city known for its history, vibrant culture, and endless energy. The adventure continues. The story is still being written.",
+                accent: "#ffd700",
                 avatar: "🐻",
                 media: "berlin.jpg",
                 tags: ["Berlin", "Current", "Senior Year"],
@@ -673,245 +707,216 @@
             }
         ];
 
-        // Create starfield
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            const numStars = 400;
-            const vh = window.innerHeight;
-            
-            for (let i = 0; i < numStars; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                
-                const size = Math.random() * 2 + 1;
-                star.style.width = size + 'px';
-                star.style.height = size + 'px';
-                star.style.left = Math.random() * 100 + '%';
-                
-                // Use a fixed initial Y position
-                const y = Math.random() * vh;
-                star.style.top = '0';
-                star.style.transform = `translateY(${y}px)`;
-                star.setAttribute('data-y', y);
-                
-                star.style.animationDelay = Math.random() * 3 + 's';
-                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                
-                // Varying speeds for depth
-                star.setAttribute('data-speed', Math.random() * 0.2 + 0.05);
-                
-                starsContainer.appendChild(star);
-            }
-        }
-
-        // Parallax stars with infinite wrapping
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const stars = document.querySelectorAll('.star');
-            const vh = window.innerHeight;
-            
-            stars.forEach(star => {
-                const speed = parseFloat(star.getAttribute('data-speed'));
-                const initialY = parseFloat(star.getAttribute('data-y'));
-                
-                // Calculate new Y with modulo to wrap around the viewport
-                let yPos = (initialY - (scrolled * speed)) % vh;
-                if (yPos < 0) yPos += vh;
-                
-                star.style.transform = `translateY(${yPos}px)`;
-            });
-        });
-
-        // Render timeline events
-        function renderTimeline() {
-            const container = document.getElementById('timeline-events');
-            
-            timelineData.forEach((event, index) => {
-                const eventDiv = document.createElement('div');
-                eventDiv.className = 'timeline-event';
-                eventDiv.setAttribute('data-year', event.year);
-                
-                let tagsHTML = event.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
-                let funFactHTML = event.funFact ? `<div class="fun-fact font-merchant"><strong>${event.funFact}</strong></div>` : '';
-                
-                // Check if media is a URL (image) or emoji/text
-                let mediaHTML;
-                if (event.media.length > 2) {
-                    mediaHTML = `<img src="${event.media}" alt="${event.title}">`;
-                } else {
-                    mediaHTML = event.media;
-                }
-                
-                eventDiv.innerHTML = `
-                    <div class="event-dot"></div>
-                    <div class="event-content">
-                        <div class="event-year">${event.year}</div>
-                        <div class="event-title">${event.title}</div>
-                        <div class="event-description">${event.description}</div>
-                        <div class="event-media">${mediaHTML}</div>
-                        <div class="event-tags">${tagsHTML}</div>
-                        ${funFactHTML}
-                    </div>
-                `;
-                
-                container.appendChild(eventDiv);
-            });
-        }
-
-        // Render floating artifacts
-        function renderArtifacts() {
-            const container = document.getElementById('artifacts-container');
-            const artifacts = Object.keys(artifactsData);
-            
-            // Random starting positions across the screen
-            const positions = [
-                { top: '20%', right: '15%', animation: 'drift1 25s ease-in-out infinite' },
-                { top: '60%', left: '25%', animation: 'drift2 30s ease-in-out infinite' },
-                { bottom: '30%', left: '20%', animation: 'drift3 28s ease-in-out infinite' },
-                { top: '40%', left: '10%', animation: 'drift4 27s ease-in-out infinite' }
-            ];
-            
-            artifacts.forEach((key, index) => {
-                const data = artifactsData[key];
-                const div = document.createElement(data.direct ? 'a' : 'div');
-                div.className = 'floating-artifact';
-                div.innerHTML = data.image ? `<img src="${data.image}" alt="${data.label || key}">${data.label ? `<span style="position:absolute; top:70px; white-space:nowrap; color:#ffd700; font-size:.7rem; letter-spacing:1px; text-shadow:2px 2px #000;">${data.label}</span>` : ''}` : data.emoji;
-                if (data.direct) {
-                    div.href = data.link;
-                    div.setAttribute('aria-label', data.label);
-                    div.style.textDecoration = 'none';
-                }
-                
-                // Set random starting position
-                if (positions[index].top) div.style.top = positions[index].top;
-                if (positions[index].bottom) div.style.bottom = positions[index].bottom;
-                if (positions[index].left) div.style.left = positions[index].left;
-                if (positions[index].right) div.style.right = positions[index].right;
-                
-                div.style.animation = positions[index].animation;
-                
-                if (!data.direct) div.addEventListener('click', () => openArtifactModal(key));
-                container.appendChild(div);
-            });
-        }
-
-        // Open artifact modal
-        function openArtifactModal(artifactKey) {
-            const data = artifactsData[artifactKey];
-            
-            const overlay = document.createElement('div');
-            overlay.className = 'modal-overlay';
-            
-            overlay.innerHTML = `
-                <div class="modal-content">
-                    ${data.image ? `<img src="${data.image}" alt="${artifactKey}" style="width: 96px; height: 96px; margin-bottom: 1rem; image-rendering: pixelated; image-rendering: -moz-crisp-edges; image-rendering: crisp-edges;">` : ''}
-                    ${!data.image ? `<div class="modal-emoji">${data.emoji}</div>` : ''}
-                    <div class="modal-message">${data.message}</div>
-                    <div class="modal-buttons">
-                        <button class="modal-button yes" id="modal-yes">${data.yesText}</button>
-                        <button class="modal-button no" id="modal-no">${data.noText}</button>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(overlay);
-            
-            overlay.querySelector('#modal-yes').addEventListener('click', () => {
-                if (data.iframe) {
-                    openIframeWindow(data.link, artifactKey);
-                } else {
-                    window.open(data.link, '_blank');
-                }
-                document.body.removeChild(overlay);
-            });
-            
-            overlay.querySelector('#modal-no').addEventListener('click', () => {
-                document.body.removeChild(overlay);
-            });
-            
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) {
-                    document.body.removeChild(overlay);
-                }
-            });
-        }
-
-        // Open iframe window
-        function openIframeWindow(url, title) {
-            const windowDiv = document.createElement('div');
-            windowDiv.style.position = 'fixed';
-            windowDiv.style.top = '50%';
-            windowDiv.style.left = '50%';
-            windowDiv.style.transform = 'translate(-50%, -50%)';
-            windowDiv.style.width = '80%';
-            windowDiv.style.height = '80%';
-            windowDiv.style.background = 'rgba(0, 0, 0, 0.9)';
-            windowDiv.style.border = '2px solid rgba(255, 215, 0, 0.5)';
-            windowDiv.style.borderRadius = '0';
-            windowDiv.style.zIndex = '2000';
-            windowDiv.style.padding = '1rem';
-            windowDiv.style.overflow = 'auto';
-
-            windowDiv.innerHTML = `
-                <h2 style="color: #fff; text-align: center; margin-bottom: 1rem; text-transform: uppercase;">${title}</h2>
-                <iframe src="${url}" style="width: 100%; height: 90%; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 0;"></iframe>
-                <button id="close-window" style="position: absolute; top: 10px; right: 10px; background: #ff4c4c; border: 1px solid #fff; color: #fff; padding: 0.5rem 1rem; border-radius: 0; cursor: pointer; font-family: inherit;">✕</button>
-                <button id="open-externally" style="position: absolute; top: 10px; left: 10px; background: #ffd700; border: 1px solid #000; color: #000; padding: 0.5rem 1rem; border-radius: 0; cursor: pointer; font-family: inherit; font-weight: bold;">↗ OPEN EXTERNALLY</button>
-            `;
-            
-            windowDiv.querySelector('#close-window').addEventListener('click', () => {
-                document.body.removeChild(windowDiv);
-            });
-            
-            windowDiv.querySelector('#open-externally').addEventListener('click', () => {
-                window.open(url, '_blank');
-            });
-
-            document.body.appendChild(windowDiv);
-        }
-
-        // Initialize
-        createStars();
-        renderTimeline();
-        renderArtifacts();
-
-        // Intersection Observer for scroll animations
-        const observerOptions = {
-            threshold: 0.2,
-            rootMargin: '0px 0px -100px 0px'
+        // Short names for the floating relics
+        const relicLabels = {
+            music: 'Playlist',
+            webSystem: 'Web OS',
+            github: 'GitHub',
+            telegram: 'Telegram'
         };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
+        const el = (tag, cls, text) => {
+            const n = document.createElement(tag);
+            if (cls) n.className = cls;
+            if (text !== undefined) n.textContent = text;
+            return n;
+        };
+        const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+        const smooth01 = (a, b, v) => { const t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
+
+        // Shared with scene.js
+        window.LIFE = { timeline: timelineData, artifacts: artifactsData, relicLabels, openArtifact: null, active: -1 };
+
+        // ---------- Chapters ----------
+        function renderTimeline() {
+            const root = document.getElementById('chapters');
+            timelineData.forEach((ev, i) => {
+                const sec = el('section', 'chapter');
+                sec.dataset.index = i;
+                sec.dataset.card = i % 2 === 0 ? 'left' : 'right';
+                sec.style.setProperty('--accent', ev.accent);
+
+                const pin = el('div', 'pin');
+                const card = el('article', 'card');
+                card.appendChild(el('div', 'card-year', ev.year));
+                card.appendChild(el('h2', 'card-title', ev.title));
+                card.appendChild(el('p', 'card-desc', ev.description));
+
+                const img = el('img', 'flat');
+                img.alt = ev.title;
+                img.loading = 'lazy';
+                img.decoding = 'async';
+                img.src = ev.media;
+                img.addEventListener('error', () => img.remove());
+                card.appendChild(img);
+
+                const tags = el('div', 'tags');
+                ev.tags.forEach(t => tags.appendChild(el('span', 'tag', t)));
+                card.appendChild(tags);
+
+                if (ev.funFact) {
+                    const ff = el('div', 'fun-fact font-merchant');
+                    ff.appendChild(el('strong', '', ev.funFact));
+                    card.appendChild(ff);
                 }
-            });
-        }, observerOptions);
 
-        document.querySelectorAll('.timeline-event').forEach(event => {
-            observer.observe(event);
+                pin.appendChild(card);
+                sec.appendChild(pin);
+                root.appendChild(sec);
+            });
+        }
+
+        // ---------- Rail ----------
+        function renderRail() {
+            const rail = document.getElementById('rail');
+            timelineData.forEach((ev, i) => {
+                const b = el('button');
+                b.type = 'button';
+                b.setAttribute('aria-label', `${ev.year}: ${ev.title}`);
+                b.appendChild(el('span', 'rail-year', ev.year));
+                b.appendChild(el('span', 'rail-dot'));
+                b.addEventListener('click', () => {
+                    const sec = document.querySelector(`.chapter[data-index="${i}"]`);
+                    const r = sec.getBoundingClientRect();
+                    const y = r.top + window.scrollY + r.height / 2 - window.innerHeight / 2;
+                    window.scrollTo({ top: y, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+                });
+                rail.appendChild(b);
+            });
+        }
+
+        // ---------- Relic buttons in the outro (keyboard/touch access to the same modals) ----------
+        function renderRelicButtons() {
+            const row = document.getElementById('relic-row');
+            Object.keys(artifactsData).forEach(key => {
+                const d = artifactsData[key];
+                const b = el('button', 'relic-btn');
+                b.type = 'button';
+                if (d.image) { const im = el('img'); im.src = d.image; im.alt = ''; b.appendChild(im); }
+                b.appendChild(el('span', '', relicLabels[key] || key));
+                b.addEventListener('click', () => openArtifactModal(key));
+                row.appendChild(b);
+            });
+        }
+
+        // ---------- Artifact modal ----------
+        function openArtifactModal(artifactKey) {
+            const data = artifactsData[artifactKey];
+            if (document.querySelector('.modal-overlay')) return;
+            const opener = document.activeElement;
+
+            const overlay = el('div', 'modal-overlay');
+            overlay.setAttribute('role', 'dialog');
+            overlay.setAttribute('aria-modal', 'true');
+            const box = el('div', 'modal-content');
+
+            if (data.image) {
+                const im = el('img');
+                im.src = data.image;
+                im.alt = '';
+                im.style.cssText = 'width:96px;height:96px;margin-bottom:1rem;image-rendering:pixelated;image-rendering:crisp-edges;';
+                box.appendChild(im);
+            }
+            box.appendChild(el('div', 'modal-message', data.message));
+            const buttons = el('div', 'modal-buttons');
+            const yes = el('button', 'modal-button yes', data.yesText);
+            const no = el('button', 'modal-button no', data.noText);
+            buttons.append(yes, no);
+            box.appendChild(buttons);
+            overlay.appendChild(box);
+            document.body.appendChild(overlay);
+
+            const close = () => {
+                overlay.remove();
+                document.removeEventListener('keydown', onKey, true);
+                if (opener && opener.focus) opener.focus({ preventScroll: true });
+            };
+            const onKey = e => { if (e.key === 'Escape') { e.stopPropagation(); close(); } };
+            document.addEventListener('keydown', onKey, true);
+
+            yes.addEventListener('click', () => { window.open(data.link, '_blank', 'noopener'); close(); });
+            no.addEventListener('click', close);
+            overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+            yes.focus();
+        }
+        window.LIFE.openArtifact = openArtifactModal;
+
+        // ---------- Scroll-driven card visibility + rail ----------
+        const chapterEls = [];
+        let outroEl, railBtns = [];
+        let ticking = false;
+
+        function updateScroll() {
+            ticking = false;
+            const vh = window.innerHeight;
+            let best = -1, bestDist = Infinity;
+
+            chapterEls.forEach((sec, i) => {
+                const r = sec.getBoundingClientRect();
+                const c = r.top + r.height / 2 - vh / 2;            // px from viewport centre
+                const d = Math.abs(c);
+                const vis = 1 - smooth01(0.25 * vh, 0.55 * vh, d);
+                const card = sec.querySelector('.card');
+                card.style.setProperty('--vis', vis.toFixed(3));
+                card.classList.toggle('off', vis < 0.05);
+                if (d < bestDist) { bestDist = d; best = i; }
+            });
+
+            const orect = outroEl.getBoundingClientRect();
+            const oc = orect.top + orect.height / 2 - vh / 2;
+            const ovis = 1 - smooth01(0.25 * vh, 0.55 * vh, Math.abs(oc));
+            const ocard = outroEl.querySelector('.card');
+            ocard.style.setProperty('--vis', ovis.toFixed(3));
+            ocard.classList.toggle('off', ovis < 0.05);
+
+            let active = bestDist < 0.6 * vh ? best : -1;
+            if (ovis > 0.5) active = timelineData.length;               // outro
+            if (active !== window.LIFE.active) {
+                window.LIFE.active = active;
+                railBtns.forEach((b, i) => b.classList.toggle('active', i === active));
+                const accent = active >= 0 && active < timelineData.length ? timelineData[active].accent : '#ffd700';
+                document.documentElement.style.setProperty('--accent', accent);
+                window.dispatchEvent(new CustomEvent('chapterchange', { detail: active }));
+            }
+            document.body.classList.toggle('scrolled', window.scrollY > 40);
+        }
+        function schedule() { if (!ticking) { ticking = true; requestAnimationFrame(updateScroll); } }
+
+        renderTimeline();
+        renderRail();
+        renderRelicButtons();
+        chapterEls.push(...document.querySelectorAll('.chapter'));
+        outroEl = document.getElementById('outro');
+        railBtns = [...document.querySelectorAll('#rail button')];
+        window.addEventListener('scroll', schedule, { passive: true });
+        window.addEventListener('resize', schedule);
+        updateScroll();
+
+        document.getElementById('start').addEventListener('click', () => {
+            const first = chapterEls[0].getBoundingClientRect();
+            window.scrollTo({ top: first.top + window.scrollY + first.height / 2 - window.innerHeight / 2,
+                              behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
         });
 
-        // Smooth scroll to timeline on indicator click
-        document.querySelector('.scroll-indicator').addEventListener('click', () => {
-            document.querySelector('.timeline-container').scrollIntoView({
-                behavior: 'smooth'
-            });
-        });
-
-        // Easter egg: Konami code
+        // ---------- Easter egg: Konami code ----------
         let konamiCode = [];
         const konamiPattern = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-        
+        const toastEl = document.getElementById('toast');
+        let toastTimer = 0;
         document.addEventListener('keydown', (e) => {
             konamiCode.push(e.key);
             konamiCode = konamiCode.slice(-10);
-            
             if (konamiCode.join(',') === konamiPattern.join(',')) {
-                alert('🎉 You found the secret! You are awesome!');
+                toastEl.textContent = '🎉 You found the secret! You are awesome!';
+                toastEl.classList.add('show');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => toastEl.classList.remove('show'), 4200);
+                window.dispatchEvent(new CustomEvent('konami'));
             }
         });
     </script>
+
+    <!-- The 3D flight. If this fails (no WebGL, blocked module), the page falls back to a plain timeline. -->
+    <script type="module" src="scene.js" onerror="document.body.classList.add('no-3d')"></script>
 </body>
 </html>
