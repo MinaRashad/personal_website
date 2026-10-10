@@ -25,42 +25,71 @@
 
   <link rel="stylesheet" href="fonts.css">
   <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="maze.css">
 </head>
-<body>
+<body class="maze-page">
 
-<div id="mobile-blocker">
-  <div class="blocker-content">
-    <div class="blocker-title">ACCESS_DENIED</div>
-    <p>This sector of the universe requires a high-resolution desktop terminal to navigate.</p>
-    <p style="margin-top: 15px; font-size: 10px; color: var(--text-dim);">MOBILE_OS_INCOMPATIBLE // RESOLUTION_INSUFFICIENT</p>
+<!-- Background: one canvas for every star, plus a soft nebula that takes the sector's colour -->
+<canvas id="space" aria-hidden="true"></canvas>
+<div class="nebula" id="nebula" aria-hidden="true"></div>
+<div class="crt" aria-hidden="true"></div>
+
+<!-- The world: current sector in the middle, its neighbours as distant silhouettes -->
+<main id="stage" aria-label="Interactive space maze. Use WASD or the arrow keys to travel between sectors and Enter to open one.">
+  <div id="parallax">
+    <div id="world"></div>
+    <div id="labels"></div>
   </div>
-</div>
+</main>
 
-<div id="starfield"></div>
-<canvas id="warp-canvas"></canvas>
-
-<div id="maze-container">
-  <div id="maze-stage">
-    <div id="room-view">
-      <!-- Room content injected here -->
+<div id="hud">
+  <header id="hud-top">
+    <div id="site-title">// explorer_v2.0</div>
+    <div id="loc-line">LOCATION: <span id="loc-name">...</span></div>
+    <div id="hint">
+      <span class="kb-only"><b>WASD</b> move · <b>ENTER</b> access · <b>`</b> terminal · <b>M</b> sound · <b>R</b> home</span>
+      <span class="touch-only"><b>SWIPE</b> to travel · <b>TAP</b> a sector · <b>TAP</b> the centre to enter</span>
     </div>
-    <div id="node-info">
-      <div class="info-name"></div>
-      <div class="info-desc"></div>
+  </header>
+
+  <aside id="map" aria-label="Sector map">
+    <div class="map-head"><span>SECTOR MAP</span><span id="map-count">CHARTED 0/0</span></div>
+    <canvas id="minimap" width="172" height="132" title="Click a charted sector to warp there"></canvas>
+  </aside>
+
+  <section id="panel">
+    <div class="panel-head">
+      <div id="info-name"></div>
+      <div id="info-coord"></div>
     </div>
-    <!-- Corridors and Signs injected here -->
+    <div id="info-desc"></div>
+    <button id="info-enter" class="btn" type="button">[ ENTER ] ACCESS</button>
+  </section>
+
+  <div id="toolbar">
+    <button id="btn-sound" class="btn" type="button" aria-pressed="true">[M] SOUND: ON</button>
+    <button id="btn-term" class="btn" type="button">[`] TERMINAL</button>
   </div>
 </div>
 
-<div id="ui">
-  <div id="header">
-    <span id="site-title">// explorer_v1.1</span>
-    <span id="hint">WASD to move · ENTER to access  · R to reset</span>
-  </div>
-  <div id="status">
-    <div class="stat">LOCATION: <span id="loc-name">...</span></div>
+<div id="term" role="dialog" aria-label="Terminal" aria-hidden="true">
+  <div id="term-log"></div>
+  <div id="term-row">
+    <span id="term-prompt">visitor@maze:~$</span>
+    <input id="term-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal command">
   </div>
 </div>
+
+<div id="dock" aria-hidden="true"><div id="dock-line"></div></div>
+<div id="flash" aria-hidden="true"></div>
+<div id="toast" role="status"></div>
+<div id="sr" class="sr-only" aria-live="polite"></div>
+
+<noscript>
+  <p style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;color:#b0b0d0;padding:24px;text-align:center;">
+    This sector needs JavaScript. <a href="About/index.html" style="color:#7a6aee;margin-left:8px;">Go to the About page</a>
+  </p>
+</noscript>
 
 <audio id="transition_sfx" src="sfx/fast_swoosh.wav" preload="auto"></audio>
 
