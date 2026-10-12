@@ -12,7 +12,7 @@ const MAZE = {
       type: 'room',
       name: 'About Mina',
       desc: 'The personal archives of Mina Eskandar. Biometric data and history stored here.',
-      image: 'About/cat.gif',
+      image: 'icons/planets/planet-1-a-export.gif',
       href: 'About/index.html',
       theme: '#7a6aee', hum: 110,
       exits: {
