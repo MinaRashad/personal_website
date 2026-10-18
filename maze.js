@@ -52,7 +52,7 @@ const MAZE = {
       exits: {
         north: { to: 'incident_node', note: 'INCIDENT' },
         south: { to: 'homelabbing_node', note: 'Homelab' },
-        east: { to: 'Cards of Fate', note: 'Silly Projects ⚠️' },
+        east: { to: 'folklored_node', note: 'Silly Projects ⚠️' },
         west: { to: 'about_node', note: 'About' }
       }
     },
@@ -64,9 +64,8 @@ const MAZE = {
       href: 'Projects/CardsOfFate/CoK.html',
       theme: '#d46bff', hum: 196,
       exits: {
-        west: { to: 'projects_node_1', note: 'Go Back' },
-        north: { to: 'cyber_rat_node', note: 'Cyber-Rat Labyrinth' },
-        east: { to: 'folklored_node', note: "folklor'ed" }
+          west: { to: 'folklored_node', note: 'Back to Cards' }
+
       }
     },
     'folklored_node': {
@@ -77,7 +76,9 @@ const MAZE = {
       href: "Projects/folklor'ed/index.html",
       theme: '#ff5d7a', hum: 220,
       exits: {
-        west: { to: 'Cards of Fate', note: 'Back to Cards' }
+        west: { to: 'projects_node_1', note: 'Go Back' },
+        north: { to: 'cyber_rat_node', note: 'Cyber-Rat Labyrinth' },
+        east: { to: 'Cards of Fate', note: "Cards of Fate" }
       }
     },
     'cyber_rat_node': {
