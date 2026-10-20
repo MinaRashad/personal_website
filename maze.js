@@ -37,7 +37,7 @@ const MAZE = {
       type: 'room',
       name: 'The Museum',
       desc: 'A curated collection of physical and digital artifacts.',
-      image: 'icons/scroll.png',
+      image: 'icons/museum.png',
       href: 'Museum/index.html',
       theme: '#ffb454', hum: 130.8,
       exits: {
@@ -64,7 +64,9 @@ const MAZE = {
       href: 'Projects/CardsOfFate/CoK.html',
       theme: '#d46bff', hum: 196,
       exits: {
-          west: { to: 'folklored_node', note: 'Back to Cards' }
+          west: { to: 'folklored_node', note: 'Back to Cards' },
+          north: { to: 'cyber_rat_node', note: 'Cyber-Rat Labyrinth' },
+
 
       }
     },
@@ -77,7 +79,6 @@ const MAZE = {
       theme: '#ff5d7a', hum: 220,
       exits: {
         west: { to: 'projects_node_1', note: 'Go Back' },
-        north: { to: 'cyber_rat_node', note: 'Cyber-Rat Labyrinth' },
         east: { to: 'Cards of Fate', note: "Cards of Fate" }
       }
     },
