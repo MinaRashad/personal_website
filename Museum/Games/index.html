@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Museum - Favourite Games - Mina Eskandar</title>
+    <link rel="stylesheet" href="../../fonts.css">
+    <link rel="stylesheet" href="../../theme.css">
+    <style>
+        body {
+            background: #000;
+            color: var(--text);
+            font-family: Pixel, Courier, monospace;
+            min-height: 100vh;
+            margin: 0;
+            padding: 80px 20px;
+        }
+
+        .back-to-museum {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 4px 4px 0px rgba(122, 106, 234, 0.2);
+        }
+
+        .back-to-museum:hover {
+            background: var(--accent);
+            color: #000;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px rgba(122, 106, 234, 0.4);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: var(--text-hi);
+            text-shadow: 0 0 20px var(--accent);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-desc {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            max-width: 700px;
+            margin: 10px auto 0;
+            line-height: 1.6;
+        }
+
+        .content-area {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(15, 15, 30, 0.8);
+            border: 1px solid var(--border);
+            padding: 40px;
+            min-height: 400px;
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.9);
+        }
+
+        /* Filter Controls */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 40px;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            background: rgba(10, 10, 20, 0.7);
+            border: 1px solid var(--border);
+            color: var(--text-mid);
+            padding: 10px 20px;
+            font-family: inherit;
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.5);
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--text-hi);
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0px rgba(122, 106, 234, 0.3);
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #000;
+            font-weight: bold;
+            box-shadow: 4px 4px 0px rgba(122, 106, 234, 0.5);
+            transform: translate(-1px, -1px);
+        }
+
+        /* Category Section */
+        .category-section {
+            margin-bottom: 55px;
+        }
+
+        .category-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+            margin-bottom: 28px;
+        }
+
+        .category-title {
+            font-size: 1.25rem;
+            color: var(--accent);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-title::before {
+            content: '//';
+            color: var(--text-dim);
+        }
+
+        .category-count {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+            padding: 3px 12px;
+            background: rgba(0, 0, 0, 0.5);
+            letter-spacing: 1px;
+        }
+
+        /* Banner Showcase Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+            gap: 30px;
+        }
+
+        /* Game Card (Banner-Centric) */
+        .game-card {
+            background: rgba(10, 10, 22, 0.85);
+            border: 1px solid var(--border);
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.28s ease;
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
+
+        .game-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 6px 12px 24px rgba(122, 106, 234, 0.2), 6px 6px 0px rgba(122, 106, 234, 0.4);
+        }
+
+        /* Banner Container (Native Steam 460:215 aspect ratio) */
+        .game-banner-box {
+            width: 100%;
+            aspect-ratio: 460 / 215;
+            background: #060610;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .game-banner {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.35s ease, filter 0.3s ease;
+        }
+
+        .game-card:hover .game-banner {
+            transform: scale(1.04);
+            filter: brightness(1.08);
+        }
+
+        /* For standalone emblem/pixel icons centered in banner space */
+        .game-banner.banner-contain {
+            width: auto;
+            max-width: 60%;
+            max-height: 75%;
+            object-fit: contain;
+            image-rendering: pixelated;
+            filter: drop-shadow(0 0 12px rgba(122, 106, 234, 0.45));
+        }
+
+        .game-card:hover .game-banner.banner-contain {
+            transform: scale(1.08);
+        }
+
+        /* Game Details Area */
+        .game-details {
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .game-headline {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .game-title {
+            color: var(--text-hi);
+            font-size: 1.15rem;
+            font-weight: bold;
+            margin: 0;
+            line-height: 1.35;
+            letter-spacing: 0.5px;
+        }
+
+        .game-card:hover .game-title {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(122, 106, 234, 0.6);
+        }
+
+        .game-tag {
+            background: rgba(122, 106, 234, 0.15);
+            color: var(--accent);
+            border: 1px solid rgba(122, 106, 234, 0.35);
+            padding: 3px 8px;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            white-space: nowrap;
+            align-self: flex-start;
+        }
+
+        .game-desc {
+            color: var(--text);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .game-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px dashed var(--border);
+            padding-top: 12px;
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        .game-category-badge {
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+        }
+
+        .game-link-action {
+            color: var(--text-dim);
+            letter-spacing: 1.5px;
+            transition: color 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .game-card:hover .game-link-action {
+            color: var(--text-hi);
+            transform: translateX(2px);
+        }
+
+        #starfield {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: radial-gradient(circle at center, #0a0a1a 0%, #000 100%);
+            z-index: -1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="starfield"></div>
+    <a href="../index.html" class="back-to-museum">&lt; BACK TO MUSEUM</a>
+
+    <header>
+        <h1>Games</h1>
+        <p class="header-desc">
+            Immersive virtual realms, narrative thrillers, legendary adventures, and classic survival experiences.
+        </p>
+    </header>
+
+    <div class="content-area">
+        <!-- Filter Bar -->
+        <div id="filter-bar" class="filter-bar"></div>
+
+        <!-- Dynamic Games Container -->
+        <div id="games-container"></div>
+    </div>
+
+    <script>
+        // Starfield Background
+        function createStars() {
+            const starfield = document.getElementById('starfield');
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 2 + 0.5;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.opacity = 0.2 + Math.random() * 0.8;
+                starfield.appendChild(star);
+            }
+        }
+        createStars();
+
+        /**
+         * SVG Fallback generator in case game banner fails to load
+         */
+        function getFallbackBanner(title) {
+            const initial = (title || '?').charAt(0).toUpperCase();
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="460" height="215" viewBox="0 0 460 215"><rect width="460" height="215" fill="%230c0c1c"/><rect x="8" y="8" width="444" height="199" fill="none" stroke="%237a6aea" stroke-width="1" stroke-dasharray="6,4"/><text x="50%" y="48%" dominant-baseline="middle" text-anchor="middle" fill="%237a6aea" font-size="48" font-family="monospace" font-weight="bold">${initial}</text><text x="50%" y="74%" dominant-baseline="middle" text-anchor="middle" fill="%238888aa" font-size="14" font-family="monospace">${encodeURIComponent(title)}</text></svg>`;
+            return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+        }
+
+        /**
+         * Dynamic Games collection organized into cohesive genres:
+         * 1. "Action & Adventure"   - high-stakes epics, stealth, open-world, and shooters
+         * 2. "Narrative & Mystery"  - narrative-driven adventures, interactive thrillers, and detective puzzles
+         * 3. "Survival & Indie"     - sandbox exploration, survival horror, roguelikes, and emulation
+         */
+        const gamesData = {
+            "Action & Adventure": [
+                {
+                    name: "God of War",
+                    tag: "Action Adventure",
+                    desc: "Stunning mythological odyssey following Kratos and his path to destroy the gods of Athena.",
+                    image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1593500/header.jpg",
+                    url: "https://www.playstation.com/games/god-of-war/"
+                },
+                {
+                    name: "Grand Theft Auto (San Andreas & V)",
+                    tag: "Open World Action",
+                    desc: "Rockstar's cinematic open-world masterworks chronicling criminal ambition across Los Santos and San Andreas.",
+                    image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/271590/header.jpg",
+                    url: "https://www.rockstargames.com/gta-v"
+                },
+                {
+                    name: "The Elder Scrolls V: Skyrim",
+                    tag: "Open World RPG",
+                    desc: "Legendary open-world fantasy epic exploring northern Tamriel as the prophesied dragon-slaying Dragonborn.",
+                    image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/489830/header.jpg",
+                    url: "https://elderscrolls.bethesda.net/skyrim"
+                },
+                {
+                    name: "Half-Life",
+                    tag: "Sci-Fi FPS",
+                    desc: "Valve's landmark first-person sci-fi shooter navigating Gordon Freeman through the Black Mesa incident.",
+                    image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/70/header.jpg",
+                    url: "https://www.half-life.com/"
+                },
+                {
+                    name: "Hitman",
+                    tag: "Stealth & Assassination",
+                    desc: "World of Assassination sandbox stealth series providing ultimate tactical freedom to execute global contracts as Agent 47.",
+                    image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1659040/header.jpg",
+                    url: "https://hitman.com/"
+                },
+                {
+                    name: "Total Overdose",
+                    tag: "Over-The-Top Action",
+                    desc: "Acrobatic third-person shooter bursting with bullet-time wall walks, rewind combos, and Mexican cartel mayhem.",
+                    image: "TOD.webp",
+                    url: "https://www.myabandonware.com/game/total-overdose-a-gunslinger-s-tale-in-mexico-cvq"
+                },
+                {
+                    name: "Yu-Gi-Oh! Duel Links",
+                    tag: "Digital Card Game",
+                    desc: "Fast-paced Speed Duel digital trading card battleground featuring iconic anime duelists and signature cards.",
+                    image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/601510/header.jpg",
+                    url: "https://www.konami.com/yugioh/duel_links/"
+                },
+                ,
+                {
+                    name: "DOOM",
+                    tag: "Action and Demons",
+                    desc: "Obliterate demon hordes through the depths of Hell. Fast-paced action",
+                    image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/379720/header.jpg",
+                    url: "https://www.konami.com/yugioh/duel_links/"
+                }
+            ],
+            "Narrative & Mystery": [
+                {
+                    name: "Undertale",
+                    tag: "Narrative RPG",
+                    desc: "Beloved indie RPG where nobody has to die, filled with subverted tropes, unforgettable characters, and heart.",
+                    image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/391540/header.jpg",
+                    url: "https://undertale.com/"
+                },
+                {
+                    name: "Deltarune",
+                    tag: "Episodic RPG",
+                    desc: "Toby Fox's atmospheric parallel story following Kris, Susie, and Ralsei through mysterious Dark Worlds.",
+                    image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/1671210/header.jpg",
+                    url: "https://deltarune.com/"
+                },
+                {
+                    name: "The Rise of the Golden Idol",
+                    tag: "Detective & Mystery",
+                    desc: "Acclaimed deductive mystery investigation unravelling twenty bizarre, interconnected deaths across the 1970s.",
+                    image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/2716400/header.jpg",
+                    url: "https://www.playstack.com/game/the-rise-of-the-golden-idol/"
+                },
+                {
+                    name: "Fahrenheit (Indigo Prophecy)",
+                    tag: "Interactive Drama",
+                    desc: "Groundbreaking cinematic supernatural thriller exploring a NYC murder mystery through multiple intersecting lives.",
+                    image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/312840/header.jpg",
+                    url: "https://www.quanticdream.com/en/fahrenheit"
+                },
+                {
+                    name: "Heavy Rain",
+                    tag: "Cinematic Thriller",
+                    desc: "Tense emotional noir adventure following four disparate characters racing against time to find the Origami Killer.",
+                    image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/960910/header.jpg",
+                    url: "https://www.quanticdream.com/en/heavy-rain"
+                }
+            ],
+            "Survival & Indie": [
+                {
+                    name: "Minecraft",
+                    tag: "Sandbox & Survival",
+                    desc: "Infinite voxel world of exploration, survival crafting, redstone mechanics, and limitless creative freedom.",
+                    image: "minecraft.jpg",
+                    url: "https://www.minecraft.net/"
+                },
+                {
+                    name: "Resident Evil: Revelations",
+                    tag: "Survival Horror",
+                    desc: "Claustrophobic survival horror starring Jill Valentine investigating bio-terror horrors aboard the cruise ship Queen Zenobia.",
+                    image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/222480/header.jpg",
+                    url: "https://www.residentevil.com/"
+                },
+                {
+                    name: "Five Nights at Freddy's (FNAF)",
+                    tag: "Survival Horror",
+                    desc: "Tense cult-classic survival horror managing security monitors, power reserves, and doors against roaming animatronics.",
+                    image: "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/388090/header.jpg",
+                    url: "https://store.steampowered.com/app/388090/Five_Nights_at_Freddys/"
+                },
+                {
+                    name: "Shattered Pixel Dungeon",
+                    tag: "Roguelike RPG",
+                    desc: "Traditional open-source roguelike dungeon crawler with tactical turn-based combat and deep replayability.",
+                    image: "ShatteredPD.png",
+                    isContain: true,
+                    url: "https://shatteredpixel.com/"
+                },
+                {
+                    name: "RetroArch",
+                    tag: "Emulation & Gaming",
+                    desc: "Unified multi-platform frontend engine for retro game emulators, cores, and vintage shader pipelines.",
+                    image: "https://cdn.simpleicons.org/retroarch/ffffff",
+                    isContain: true,
+                    url: "https://www.retroarch.com/"
+                }
+            ]
+        };
+
+        let currentFilter = 'ALL';
+
+        /**
+         * Render filter tabs dynamically based on the keys in gamesData
+         */
+        function renderFilterBar() {
+            const filterBar = document.getElementById('filter-bar');
+            filterBar.innerHTML = '';
+
+            const categories = Object.keys(gamesData);
+            const totalCount = Object.values(gamesData).reduce((sum, list) => sum + list.length, 0);
+
+            // 'ALL' button
+            const allBtn = document.createElement('button');
+            allBtn.className = `filter-btn ${currentFilter === 'ALL' ? 'active' : ''}`;
+            allBtn.textContent = `ALL (${totalCount})`;
+            allBtn.onclick = () => {
+                currentFilter = 'ALL';
+                renderFilterBar();
+                renderGames();
+            };
+            filterBar.appendChild(allBtn);
+
+            // Category buttons
+            categories.forEach(cat => {
+                const count = gamesData[cat].length;
+                const btn = document.createElement('button');
+                btn.className = `filter-btn ${currentFilter === cat ? 'active' : ''}`;
+                btn.textContent = `${cat.toUpperCase()} (${count})`;
+                btn.onclick = () => {
+                    currentFilter = cat;
+                    renderFilterBar();
+                    renderGames();
+                };
+                filterBar.appendChild(btn);
+            });
+        }
+
+        /**
+         * Dynamically build category sections and wide banner cards from gamesData
+         */
+        function renderGames() {
+            const container = document.getElementById('games-container');
+            container.innerHTML = '';
+
+            for (const [category, games] of Object.entries(gamesData)) {
+                if (currentFilter !== 'ALL' && currentFilter !== category) {
+                    continue;
+                }
+
+                // Section wrapper
+                const section = document.createElement('div');
+                section.className = 'category-section';
+
+                // Section Header
+                const header = document.createElement('div');
+                header.className = 'category-header';
+
+                const title = document.createElement('h2');
+                title.className = 'category-title';
+                title.textContent = category;
+
+                const countBadge = document.createElement('span');
+                countBadge.className = 'category-count';
+                countBadge.textContent = `${games.length} GAMES`;
+
+                header.appendChild(title);
+                header.appendChild(countBadge);
+                section.appendChild(header);
+
+                // Grid of Banner Cards
+                const grid = document.createElement('div');
+                grid.className = 'games-grid';
+
+                games.forEach(game => {
+                    const card = document.createElement('a');
+                    card.className = 'game-card';
+                    card.href = game.url;
+                    card.target = '_blank';
+                    card.rel = 'noopener noreferrer';
+
+                    const fallback = getFallbackBanner(game.name);
+                    const containClass = game.isContain ? 'banner-contain' : '';
+
+                    card.innerHTML = `
+                        <div class="game-banner-box">
+                            <img 
+                                src="${game.image}" 
+                                alt="${game.name} banner" 
+                                class="game-banner ${containClass}"
+                                loading="lazy"
+                                onerror="this.onerror=null; this.src='${fallback}';"
+                            />
+                        </div>
+                        <div class="game-details">
+                            <div>
+                                <div class="game-headline">
+                                    <h3 class="game-title">${game.name}</h3>
+                                    <span class="game-tag">${game.tag}</span>
+                                </div>
+                                <div class="game-desc">${game.desc}</div>
+                            </div>
+                            <div class="game-footer">
+                                <span class="game-category-badge">${category}</span>
+                                <span class="game-link-action">PLAY / EXPLORE &gt;</span>
+                            </div>
+                        </div>
+                    `;
+
+                    grid.appendChild(card);
+                });
+
+                section.appendChild(grid);
+                container.appendChild(section);
+            }
+        }
+
+        // Initialize display
+        renderFilterBar();
+        renderGames();
+    </script>
+</body>
+</html>
