@@ -26,7 +26,7 @@ const MAZE = {
       type: 'room',
       name: 'Live Chat',
       desc: 'Check transmission from travelers and crew members.',
-      image: 'icons/plane.png',
+      image: 'icons/message.png',
       href: 'Chat/index.html',
       theme: '#4dd0ff', hum: 146.8,
       exits: {
@@ -34,14 +34,62 @@ const MAZE = {
       }
     },
     'museum_node': {
-      type: 'room',
+      type: 'corridor',
       name: 'The Museum',
-      desc: 'A curated collection of physical and digital artifacts.',
-      image: 'icons/museum.png',
-      href: 'Museum/index.html',
+      desc: 'A collection of artifacts, digital and physical, that define my trajectory.',
       theme: '#ffb454', hum: 130.8,
       exits: {
-        south: { to: 'about_node', note: 'Back to Archive' }
+        south: { to: 'about_node', note: 'Back to Archive' },
+        west: { to: 'museum_books_node', note: 'Books' },
+        north: { to: 'museum_websites_node', note: 'Websites' }
+      }
+    },
+    'museum_books_node': {
+      type: 'room',
+      name: 'Books',
+      desc: 'De-serialized data in paper format. The foundations of my knowledge base.',
+      image: 'icons/book.png',
+      href: 'Museum/Books/index.html',
+      theme: '#f4a261', hum: 138.6,
+      exits: {
+        east: { to: 'museum_node', note: 'The Museum' },
+        north: { to: 'museum_apps_node', note: 'Apps' }
+      }
+    },
+    'museum_apps_node': {
+      type: 'room',
+      name: 'Apps',
+      desc: 'Essential software, creative workstations, and mobile utilities.',
+      image: 'icons/selfhost_apps.png',
+      href: 'Museum/Apps/index.html',
+      theme: '#e9c46a', hum: 155.6,
+      exits: {
+        south: { to: 'museum_books_node', note: 'Books' },
+        east: { to: 'museum_websites_node', note: 'Websites' }
+      }
+    },
+    'museum_websites_node': {
+      type: 'room',
+      name: 'Websites',
+      desc: 'Nodes of interest in the global network.',
+      image: 'icons/websites.png',
+      href: 'Museum/Websites/index.html',
+      theme: '#e76f51', hum: 146.8,
+      exits: {
+        south: { to: 'museum_node', note: 'The Museum' },
+        west: { to: 'museum_apps_node', note: 'Apps' },
+        north: { to: 'museum_games_node', note: 'Games' }
+      }
+    },
+    'museum_games_node': {
+      type: 'room',
+      name: 'Games',
+      desc: 'Immersive virtual realms, narrative thrillers, and legendary adventures.',
+      image: 'icons/game.gif',
+      href: 'Museum/Games/index.html',
+      theme: '#f39c12', hum: 164.8,
+      exits: {
+        south: { to: 'museum_websites_node', note: 'Websites' }
       }
     },
     'projects_node_1': {
